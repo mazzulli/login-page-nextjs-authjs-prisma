@@ -1,6 +1,10 @@
 import { DashboardLayout } from "@/components/dashboard-layout"
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
-export default function TestConfigurationsPage() {
+export default async function TestConfigurationsPage() {
+  const session = await auth();
+      if (!session) redirect("/sign-in");
   return (
     <DashboardLayout>
       <div className="p-6">
