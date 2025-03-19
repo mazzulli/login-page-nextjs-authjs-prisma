@@ -30,7 +30,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         });
 
         if (!user) {
-          throw new Error("Usuário ou senha inválido(s).");
+          throw new Error("User or password invalid.");
         }
 
         return user;

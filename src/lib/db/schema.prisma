@@ -3,12 +3,12 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id            String          @id @default(cuid())
+  id            String          @id @default(uuid())
   name          String?
   email         String?         @unique
   password      String?
@@ -21,10 +21,14 @@ model User {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  // included for this winner project
+  phoneNumber String?
+  accessType  EnumAccessType?
 }
 
 model Account {
-  id                String  @id @default(cuid())
+  id                String  @id @default(uuid())
   userId            String
   type              String
   provider          String
@@ -46,7 +50,7 @@ model Account {
 }
 
 model Session {
-  id           String   @id @default(cuid())
+  id           String   @id @default(uuid())
   sessionToken String   @unique
   userId       String
   expires      DateTime
@@ -78,4 +82,104 @@ model Authenticator {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([userId, credentialID])
+}
+
+model Collaborator {
+  id          String   @id @default(uuid())
+  name        String?
+  email       String?  @unique
+  phoneNumber String?
+  document    String?
+  bankCode    String?
+  bankName    String?
+  agency      String?
+  account     String?
+  meiNumber   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  tests            Test[]
+  testSupervisors  TestSupervisor[]
+  testInvigilators TestInvigilator[]
+  testSpeakings    TestSpeaking[]
+}
+
+model Venue {
+  id         String   @id @default(uuid())
+  name       String?
+  address    String?
+  city       String?
+  district   String?
+  state      String?
+  postalCode String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model TestValue {
+  id        String   @id @default(uuid())
+  name      String?
+  value     Float?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Test {
+  id              String   @id @default(uuid())
+  idVenue         String
+  date            DateTime
+  testDescription String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  collaborator   Collaborator @relation(fields: [collaboratorId], references: [id])
+  collaboratorId String
+}
+
+model TestSupervisor {
+  id             String   @id @default(uuid())
+  idTest         String
+  idCollaborator String
+  qtyHours       Float
+  extraValue     Float
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  collaborator   Collaborator @relation(fields: [collaboratorId], references: [id])
+  collaboratorId String
+}
+
+model TestInvigilator {
+  id             String   @id @default(uuid())
+  idTest         String
+  idCollaborator String
+  qtyHours       Float
+  extraValue     Float
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  collaborator   Collaborator @relation(fields: [collaboratorId], references: [id])
+  collaboratorId String
+}
+
+model TestSpeaking {
+  id             String   @id @default(uuid())
+  idTest         String
+  idCollaborator String
+  idTestValue    String
+  TestValue      Float
+  qtyHours       Float
+  extraValue     Float
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  collaborator   Collaborator @relation(fields: [collaboratorId], references: [id])
+  collaboratorId String
+}
+
+enum EnumAccessType {
+  Administrator
+  Supervisor
+  Invigilator
+  Speaking
 }
