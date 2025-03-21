@@ -4,6 +4,7 @@ import db from "@/lib/db/db";
 import { SchoolSchema, schoolSchema } from "@/lib/models/school-schema";
 
 export const createSchool = async (data: SchoolSchema) => {
+  await new Promise((resolve) => setTimeout(resolve, 2000));
   schoolSchema.parse(data);
   await db.venue.create({
     data: {

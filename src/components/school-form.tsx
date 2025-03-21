@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogD
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { SchoolProps } from "./school-table"
+import { School } from "./school-table"
 import { useForm } from "react-hook-form"
 import { schoolSchema } from "@/lib/models/school-schema"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -16,10 +16,10 @@ import { Loader2Icon } from "lucide-react"
 import { DialogClose } from "@radix-ui/react-dialog"
 
 interface SchoolFormProps {
-  formValues: SchoolProps | null
+  formValues: School | null
   isOpen: boolean
   onClose: () => void
-  onSave: (formValues: SchoolProps) => void
+  onSave: (formValues: School) => void
   mode: "create" | "edit"
 }
 
@@ -30,6 +30,7 @@ export function SchoolForm({ formValues, isOpen, onClose, onSave, mode }: School
     shouldUnregister: true, // limpa os dados do formulário ao fechar
     resolver: zodResolver(schoolSchema),        
     defaultValues: {      
+      id: formValues?.id || "",
       name: formValues?.name || "",
       address: formValues?.address || "",
       number: formValues?.number || "",
@@ -41,30 +42,6 @@ export function SchoolForm({ formValues, isOpen, onClose, onSave, mode }: School
   })
   
   const { setValue } = form
-  
-  const onSubmit = async (values: FormSchema) => {    
-    try {
-      console.log("values: ", values)
-      
-      await createSchool(values)
-
-      onSave(values)      
-      onClose()
-      toast({
-        title: "School saved",
-        description: "The school was saved successfully.",
-      })        
-    } catch (error) {
-      console.error("Error saving school:", error)
-      toast({
-        title: "Error saving school",
-        description: "There was an error saving the school, please try again.",        
-      })
-    } finally {
-      form.reset()      
-    }
-  }
-
 
   // search city and state by zipCode
   const fetchAddress = async (value: string) => {
@@ -86,6 +63,26 @@ export function SchoolForm({ formValues, isOpen, onClose, onSave, mode }: School
         setValue("district", "");
         setValue("state", "");
       };
+    }
+  }
+
+  const onSubmit = async (values: FormSchema) => {    
+    try {
+      await createSchool(values)
+      onSave(values)      
+      onClose()
+      toast({
+        title: "School saved",
+        description: "The school was saved successfully.",
+      })        
+    } catch (error) {
+      console.error("Error saving school:", error)
+      toast({
+        title: "Error saving school",
+        description: "There was an error saving the school, please try again.",        
+      })
+    } finally {
+      form.reset()      
     }
   }
   
@@ -207,7 +204,7 @@ export function SchoolForm({ formValues, isOpen, onClose, onSave, mode }: School
               </DialogClose>
               <Button                 
                 type="submit"
-                disabled={form.formState.isSubmitting}                
+                disabled={form.formState.isSubmitting}
               >
                 {form.formState.isSubmitting && (
                   <Loader2Icon className="animate-spin mr-2" />

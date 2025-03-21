@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const schoolSchema = z.object({
+  id: z.string().uuid().optional(),
   name: z.string().min(2, {
     message: "School name must be at least 2 characters long.",
   }),

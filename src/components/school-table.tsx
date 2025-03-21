@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { useToast } from "@/components/ui/use-toast"
 
-export type SchoolProps = {
+export type School = {
   id?: string
   name: string
   address: string
@@ -30,7 +30,7 @@ export type SchoolProps = {
 }
 
 // This would typically come from your database
-const data: SchoolProps[] = [
+const data: School[] = [
   {
     id: "1",
     name: "Escola Municipal João da Silva",
@@ -64,10 +64,10 @@ const data: SchoolProps[] = [
 ]
 
 export function SchoolTable() {
-  const [schools, setSchools] = useState<SchoolProps[]>(data)
+  const [schools, setSchools] = useState<School[]>(data)
   const [filterValue, setFilterValue] = useState("")
   const [isFormOpen, setIsFormOpen] = useState(false)
-  const [currentSchool, setCurrentShool] = useState<SchoolProps | null>(null)
+  const [currentSchool, setCurrentShool] = useState<School | null>(null)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [schoolToDelete, setShoolToDelete] = useState<string | null>(null)
   const { toast } = useToast()
@@ -79,13 +79,12 @@ export function SchoolTable() {
     setIsFormOpen(true)    
   }
 
-  const handleEditSchool = (school: SchoolProps) => {
+  const handleEditSchool = (school: School) => {
     setCurrentShool(school)
     setIsFormOpen(true)
   }
 
-  const handleDeleteSchool = (schoolId?: string) => {
-    if(!schoolId) return
+  const handleDeleteSchool = (schoolId: string) => {
     setShoolToDelete(schoolId)
     setIsDeleteDialogOpen(true)
   }
@@ -102,10 +101,10 @@ export function SchoolTable() {
     }
   }
 
-  const handleSaveSchool = (data: SchoolProps) => {
-    if (data.id) {
+  const handleSaveSchool = (user: School) => {
+    if (user.id) {
       // Edit existing user
-      setSchools(schools.map((u) => (u.id === data.id ? data : u)))
+      setSchools(schools.map((u) => (u.id === user.id ? user : u)))
       toast({
         title: "School updated",
         description: "The school informations was updated with success.",
@@ -113,7 +112,7 @@ export function SchoolTable() {
     } else {
       // Add new user
       const newUser = {
-        ...data,
+        ...user,
         id: Math.random().toString(36).substring(2, 9),
       }
       setSchools([...schools, newUser])
@@ -166,7 +165,7 @@ export function SchoolTable() {
                     <Button variant="ghost" size="icon" onClick={() => handleEditSchool(school)}>
                       <Pencil className="h-4 w-4" />
                     </Button>
-                    <Button variant="ghost" size="icon" onClick={() => handleDeleteSchool(school.id)}>
+                    <Button variant="ghost" size="icon" onClick={() => handleDeleteSchool(school.id ?? "")}>
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </TableCell>
@@ -184,7 +183,7 @@ export function SchoolTable() {
       </div>
 
       {isFormOpen && (
-        <SchoolForm formValues={currentSchool} isOpen={isFormOpen} onClose={() => setIsFormOpen(false)} onSave={handleSaveSchool} mode={!currentSchool ? "create" : "edit"} />
+        <SchoolForm formValues={currentSchool} isOpen={isFormOpen} onClose={() => setIsFormOpen(false)} onSave={handleSaveSchool} mode={currentSchool ? "create" : "edit"} />
       )}
 
       <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
