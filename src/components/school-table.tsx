@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { UserForm } from "@/components/user-form"
+import { SchoolForm } from "@/components/school-form"
 import { PlusCircle, Search, Pencil, Trash2 } from "lucide-react"
 import {
   AlertDialog,
@@ -18,96 +18,108 @@ import {
 } from "@/components/ui/alert-dialog"
 import { useToast } from "@/components/ui/use-toast"
 
-// Mock data for demonstration
-const initialUsers = [
+export type SchoolProps = {
+  id?: string
+  name: string
+  address: string
+  number: string
+  district: string
+  city: string
+  state: string
+  zipCode: string
+}
+
+// This would typically come from your database
+const data: SchoolProps[] = [
   {
     id: "1",
-    name: "João Silva",
-    email: "joao@example.com",
-    phone: "(11) 98765-4321",
-    accessType: ["Administrator"],
+    name: "Escola Municipal João da Silva",
+    address: "Rua das Flores, 1545",
+    number: "1545",
+    district: "Centro",
+    city: "São Paulo",
+    state: "SP",
+    zipCode: "01001-000",
   },
   {
     id: "2",
-    name: "Maria Oliveira",
-    email: "maria@example.com",
-    phone: "(11) 91234-5678",
-    accessType: ["Supervisor", "Invigilator"],
+    name: "Colégio Estadual Maria Souza",
+    address: "Avenida Principal, 987",
+    number: "1545",
+    district: "Jardim Europa",
+    city: "Rio de Janeiro",
+    state: "RJ",    
+    zipCode: "20000-000",
   },
   {
     id: "3",
-    name: "Carlos Santos",
-    email: "carlos@example.com",
-    phone: "(11) 99876-5432",
-    accessType: ["Invigilator", "Speaking"],
+    name: "Instituto Federal de Educação",
+    address: "Rua da Ciência, 9875",
+    number: "1545",
+    district: "Universitário",
+    city: "Belo Horizonte",
+    state: "MG",
+    zipCode: "30000-000",
   },
 ]
 
-export type User = {
-  id: string
-  name: string
-  email: string
-  phone: string
-  accessType: string[] // Changed from string to string[]
-  password?: string
-}
-
-export function UserTable() {
-  const [users, setUsers] = useState<User[]>(initialUsers)
+export function SchoolTable() {
+  const [schools, setSchools] = useState<SchoolProps[]>(data)
   const [filterValue, setFilterValue] = useState("")
   const [isFormOpen, setIsFormOpen] = useState(false)
-  const [currentUser, setCurrentUser] = useState<User | null>(null)
+  const [currentSchool, setCurrentShool] = useState<SchoolProps | null>(null)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-  const [userToDelete, setUserToDelete] = useState<string | null>(null)
+  const [schoolToDelete, setShoolToDelete] = useState<string | null>(null)
   const { toast } = useToast()
 
-  const filteredUsers = users.filter((user) => user.name.toLowerCase().includes(filterValue.toLowerCase()))
+  const filteredSchool = schools.filter((school) => school.name.toLowerCase().includes(filterValue.toLowerCase()))
 
-  const handleCreateUser = () => {
-    setCurrentUser(null)
+  const handleCreateSchool = () => {
+    setCurrentShool(null)
+    setIsFormOpen(true)    
+  }
+
+  const handleEditSchool = (school: SchoolProps) => {
+    setCurrentShool(school)
     setIsFormOpen(true)
   }
 
-  const handleEditUser = (user: User) => {
-    setCurrentUser(user)
-    setIsFormOpen(true)
-  }
-
-  const handleDeleteUser = (userId: string) => {
-    setUserToDelete(userId)
+  const handleDeleteSchool = (schoolId?: string) => {
+    if(!schoolId) return
+    setShoolToDelete(schoolId)
     setIsDeleteDialogOpen(true)
   }
 
   const confirmDelete = () => {
-    if (userToDelete) {
-      setUsers(users.filter((user) => user.id !== userToDelete))
+    if (schoolToDelete) {
+      setSchools(schools.filter((schools) => schools.id !== schoolToDelete))
       toast({
-        title: "User deleted",
-        description: "The user was deleted with success.",
+        title: "School deleted",
+        description: "The school was deleted with success.",
       })
       setIsDeleteDialogOpen(false)
-      setUserToDelete(null)
+      setShoolToDelete(null)
     }
   }
 
-  const handleSaveUser = (user: User) => {
-    if (user.id) {
+  const handleSaveSchool = (data: SchoolProps) => {
+    if (data.id) {
       // Edit existing user
-      setUsers(users.map((u) => (u.id === user.id ? user : u)))
+      setSchools(schools.map((u) => (u.id === data.id ? data : u)))
       toast({
-        title: "User updated",
-        description: "The user informations was updated with success.",
+        title: "School updated",
+        description: "The school informations was updated with success.",
       })
     } else {
       // Add new user
       const newUser = {
-        ...user,
+        ...data,
         id: Math.random().toString(36).substring(2, 9),
       }
-      setUsers([...users, newUser])
+      setSchools([...schools, newUser])
       toast({
-        title: "User created",
-        description: "A new user was created with success.",
+        title: "School created",
+        description: "A new school was created with success.",
       })
     }
     setIsFormOpen(false)
@@ -125,9 +137,9 @@ export function UserTable() {
             className="pl-8"
           />
         </div>
-        <Button onClick={handleCreateUser} className="bg-green-700 text-white">
+        <Button onClick={handleCreateSchool} className="bg-green-700 text-white">
           <PlusCircle className="mr-2 h-4 w-4" />
-          New User
+          New School
         </Button>
       </div>
 
@@ -136,25 +148,25 @@ export function UserTable() {
           <TableHeader>
             <TableRow>
               <TableHead>Name</TableHead>
-              <TableHead>E-mail</TableHead>
-              <TableHead>Phone Number</TableHead>
-              <TableHead>Access Type</TableHead>
+              <TableHead>Address</TableHead>
+              <TableHead>City</TableHead>
+              <TableHead>State</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredUsers.length > 0 ? (
-              filteredUsers.map((user) => (
-                <TableRow key={user.id}>
-                  <TableCell className="font-medium">{user.name}</TableCell>
-                  <TableCell>{user.email}</TableCell>
-                  <TableCell>{user.phone}</TableCell>
-                  <TableCell>{user.accessType.join(", ")}</TableCell>
+            {filteredSchool.length > 0 ? (
+              filteredSchool.map((school) => (
+                <TableRow key={school.id}>
+                  <TableCell className="font-medium">{school.name}</TableCell>
+                  <TableCell>{school.address}, {school.number}</TableCell>
+                  <TableCell>{school.city}</TableCell>
+                  <TableCell>{school.state}</TableCell>
                   <TableCell className="text-right">
-                    <Button variant="ghost" size="icon" onClick={() => handleEditUser(user)}>
+                    <Button variant="ghost" size="icon" onClick={() => handleEditSchool(school)}>
                       <Pencil className="h-4 w-4" />
                     </Button>
-                    <Button variant="ghost" size="icon" onClick={() => handleDeleteUser(user.id)}>
+                    <Button variant="ghost" size="icon" onClick={() => handleDeleteSchool(school.id)}>
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </TableCell>
@@ -163,7 +175,7 @@ export function UserTable() {
             ) : (
               <TableRow>
                 <TableCell colSpan={5} className="h-24 text-center">
-                  No users found!
+                  No school found!
                 </TableCell>
               </TableRow>
             )}
@@ -172,7 +184,7 @@ export function UserTable() {
       </div>
 
       {isFormOpen && (
-        <UserForm user={currentUser} isOpen={isFormOpen} onClose={() => setIsFormOpen(false)} onSave={handleSaveUser} />
+        <SchoolForm formValues={currentSchool} isOpen={isFormOpen} onClose={() => setIsFormOpen(false)} onSave={handleSaveSchool} mode={!currentSchool ? "create" : "edit"} />
       )}
 
       <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>

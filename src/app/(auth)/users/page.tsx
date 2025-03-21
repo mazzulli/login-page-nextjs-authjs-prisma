@@ -10,11 +10,9 @@ export default async function Users() {
   return (
     <DashboardLayout>
       <div className="p-6">
-        <div className="container mx-auto">
-          <h1 className="text-3xl font-bold mb-6">User Sign Up</h1>
+          <h1 className="text-3xl font-bold">Users</h1>
           <UserTable />
           <Toaster />
-        </div>
       </div>
     </DashboardLayout>
   )

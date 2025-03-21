@@ -1,4 +1,4 @@
-import { schema } from "@/lib/schema";
+import { loginSchema } from "@/lib/models/login-schema";
 import db from "@/lib/db/db";
 import { executeAction } from "@/lib/executeAction";
 
@@ -7,7 +7,7 @@ const signUp = async (formData: FormData) => {
     actionFn: async () => {
       const email = formData.get("email");
       const password = formData.get("password");
-      const validatedData = schema.parse({ email, password });
+      const validatedData = loginSchema.parse({ email, password });
       await db.user.create({
         data: {
           email: validatedData.email.toLocaleLowerCase(),

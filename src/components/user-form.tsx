@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -40,27 +40,27 @@ export function UserForm({ user, isOpen, onClose, onSave }: UserFormProps) {
     const newErrors: Record<string, string> = {}
 
     if (!formData.name.trim()) {
-      newErrors.name = "Nome é obrigatório"
+      newErrors.name = "Required name"
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = "E-mail é obrigatório"
+      newErrors.email = "Required e-mail"
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "E-mail inválido"
+      newErrors.email = "Invalid e-mail"
     }
 
     if (!formData.phone.trim()) {
-      newErrors.phone = "Telefone é obrigatório"
+      newErrors.phone = "Required phone number"
     }
 
     if (!user && !formData.password) {
-      newErrors.password = "Senha é obrigatória"
+      newErrors.password = "Required password"
     } else if (!user && formData.password && formData.password.length < 6) {
-      newErrors.password = "A senha deve ter pelo menos 6 caracteres"
+      newErrors.password = "The password must be at least 6 characters"
     }
 
     if (!formData.accessType || formData.accessType.length === 0) {
-      newErrors.accessType = "Selecione pelo menos um tipo de acesso"
+      newErrors.accessType = "Select at least 1 access type"
     }
 
     setErrors(newErrors)
@@ -75,14 +75,15 @@ export function UserForm({ user, isOpen, onClose, onSave }: UserFormProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[500px]">        
         <DialogHeader>
-          <DialogTitle>{user ? "Editar Usuário" : "Novo Usuário"}</DialogTitle>
+          <DialogTitle>{user ? "Edit user" : "New user"}</DialogTitle>
+          <DialogDescription id="user-form">Fill in the form below to {user ? "edit user" : "create a new user"}</DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="name">Nome completo</Label>
+            <Label htmlFor="name">Full name</Label>
             <Input
               id="name"
               value={formData.name}
@@ -105,7 +106,7 @@ export function UserForm({ user, isOpen, onClose, onSave }: UserFormProps) {
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="phone">Telefone de contato</Label>
+            <Label htmlFor="phone">Phone number</Label>
             <Input
               id="phone"
               value={formData.phone}
@@ -117,7 +118,7 @@ export function UserForm({ user, isOpen, onClose, onSave }: UserFormProps) {
 
           {(!user || user.id === "") && (
             <div className="grid gap-2">
-              <Label htmlFor="password">Senha</Label>
+              <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
                 type="password"
@@ -130,7 +131,7 @@ export function UserForm({ user, isOpen, onClose, onSave }: UserFormProps) {
           )}
 
           <div className="grid gap-2">
-            <Label htmlFor="accessType">Tipo de Acesso</Label>
+            <Label htmlFor="accessType">Access type</Label>
             <MultiSelect
               options={[
                 { value: "Administrator", label: "Administrator" },
@@ -147,9 +148,9 @@ export function UserForm({ user, isOpen, onClose, onSave }: UserFormProps) {
 
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>
-            Cancelar
+            Cancel
           </Button>
-          <Button onClick={handleSubmit}>Salvar</Button>
+          <Button onClick={handleSubmit}>Save</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
