@@ -1,6 +1,6 @@
-import { DashboardLayout } from "@/components/dashboard-layout"
+import { DashboardLayout } from "@/_components/dashboard-layout"
 import { redirect } from "next/navigation";
-import { auth } from "@/lib/auth";
+import { auth } from "@/_lib/auth";
 
 export default async function CollaboratorsPage() {
   const session = await auth();

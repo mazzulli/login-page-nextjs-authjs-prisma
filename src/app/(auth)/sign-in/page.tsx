@@ -1,8 +1,8 @@
-import { auth } from "@/lib/auth";
-import { signIn } from "@/lib/auth";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { executeAction } from "@/lib/executeAction";
+import { auth } from "@/_lib/auth";
+import { signIn } from "@/_lib/auth";
+import { Button } from "@/_components/ui/button";
+import { Input } from "@/_components/ui/input";
+import { executeAction } from "@/_lib/executeAction";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 

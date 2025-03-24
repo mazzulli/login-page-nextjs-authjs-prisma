@@ -1,5 +1,5 @@
 export interface AddressInfo {
-  zipCode: string;
+  postalCode: string;
   uf: string;
   localidade: string;
 }

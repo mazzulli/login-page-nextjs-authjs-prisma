@@ -1,5 +1,5 @@
-import { DashboardLayout } from "@/components/dashboard-layout"
-import { auth } from "@/lib/auth";
+import { DashboardLayout } from "@/_components/dashboard-layout"
+import { auth } from "@/_lib/auth";
 import { redirect } from "next/navigation";
 
 export default async function Home() {
