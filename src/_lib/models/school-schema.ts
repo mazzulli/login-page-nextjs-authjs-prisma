@@ -8,6 +8,9 @@ export const schoolSchema = z.object({
   address: z.string().min(2, {
     message: "Address must be at least 2 characters long.",
   }),
+  number: z.string().min(1, {
+    message: "Number is required.",
+  }),
   district: z.string().min(2, {
     message: "Disctrict must be at least 2 characters long.",
   }),
@@ -15,14 +18,16 @@ export const schoolSchema = z.object({
     message: "City must be at least 2 characters long.",
   }),
   state: z.string().length(2, {
-    message: "State must be at least 2 characters long.",
+    message: "Invalid.",
   }),
-  number: z.string().min(1, {
-    message: "Number is required.",
-  }),
-  postalCode: z.string().min(8, {
-    message: "Zip code must be 8 characters long.",
-  }),
+  postalCode: z
+    .string()
+    .regex(/^\d+$/, {
+      message: "Input only numbers.",
+    })
+    .length(8, {
+      message: "Zip code must be 8 characters long.",
+    }),
 });
 
 export type SchoolSchema = z.infer<typeof schoolSchema>;

@@ -19,8 +19,10 @@ export default async function Users() {
     <DashboardLayout>
       <div className="p-6">
         <span className="text-green-600">Venue Managing</span>
-          <h1 className="text-3xl font-bold mb-6">Schools</h1>         
-          <Suspense fallback={<div>Loading...</div>}>
+          <div className="flex justify-between">
+            <h1 className="text-3xl font-bold mb-6">Venues</h1>                     
+          </div>
+          <Suspense fallback={<div>Loading...</div>}>            
             <DataTable columns={schoolTableColumns} data={JSON.parse(JSON.stringify(schools))} />
           </Suspense>
           <Toaster />

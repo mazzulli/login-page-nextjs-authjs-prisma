@@ -34,6 +34,10 @@ export const schoolTableColumns: ColumnDef<Venue>[] = [
     header: "Address",
   },
   {
+    accessorKey: "number",
+    header: "Number",
+  },
+  {
     accessorKey: "city",
     header: "City",
   },
