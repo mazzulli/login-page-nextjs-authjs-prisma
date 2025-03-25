@@ -3,12 +3,11 @@
 import { Button } from "@/_components/ui/button"
 import { Venue } from "@prisma/client"
 import { ColumnDef } from "@tanstack/react-table"
-import { MoreHorizontal } from "lucide-react"
+import { ClipboardCopyIcon, EditIcon, MoreHorizontal, Trash2Icon } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
+  DropdownMenuItem,  
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/_components/ui/dropdown-menu"
@@ -63,16 +62,22 @@ export const schoolTableColumns: ColumnDef<Venue>[] = [
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuContent align="end">              
               <DropdownMenuItem
                 onClick={() => navigator.clipboard.writeText(venue.id)}
               >
-                Copy Venue ID
+                <ClipboardCopyIcon size={16}/>
+                Copy ID
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>View venue</DropdownMenuItem>
-              <DropdownMenuItem>View venue details</DropdownMenuItem>
+              <DropdownMenuItem>
+                <EditIcon size={16}/>
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem className="text-red-500">
+                <Trash2Icon size={16}/>
+                Delete
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
