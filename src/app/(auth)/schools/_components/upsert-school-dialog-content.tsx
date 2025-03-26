@@ -47,11 +47,12 @@ export const UpsertSchoolDialogContent = ({
     // salvar no banco
     try {
       await upsertSchool({...data, id: defaultValues?.id })
-      onSuccess?.()
-      toast({
-        title: "School created",  
-        description: "School created successfully.",
-      })
+      onSuccess?.()      
+      toast(isEditing ? { 
+        title:  "School updated",  
+        description: "School updated successfully.",
+      } : {title:  "School created",  
+        description: "School created successfully.",})
       }  
     catch (error) {
       console.error(error)
@@ -95,7 +96,7 @@ export const UpsertSchoolDialogContent = ({
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <DialogHeader>
-            <DialogTitle>{isEditing ? "New" : "Edit"} venue</DialogTitle>
+            <DialogTitle>{!isEditing ? "New" : "Edit"} venue</DialogTitle>
             <DialogDescription id="user-form">Fill in the form below to create a new venue</DialogDescription>            
           </DialogHeader>
             <FormField
