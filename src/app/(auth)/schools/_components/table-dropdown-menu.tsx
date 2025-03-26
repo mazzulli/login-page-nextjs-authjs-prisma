@@ -14,8 +14,7 @@ interface SchoolTableDropdownMenuProps {
     venue: Venue;
 }
 
-const SchoolTableDropdownMenu = ({venue}: SchoolTableDropdownMenuProps) => {
-     // eslint-disable-next-line react-hooks/rules-of-hooks
+const SchoolTableDropdownMenu = ({venue}: SchoolTableDropdownMenuProps) => {     
      const [editDialogOpen, setEditDialogOpen] = useState(false)     
      return (        
        <div className="flex space-x-2">
