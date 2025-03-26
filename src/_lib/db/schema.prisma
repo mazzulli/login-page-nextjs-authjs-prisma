@@ -106,13 +106,13 @@ model Collaborator {
 
 model Venue {
   id         String   @id @default(uuid())
-  name       String?
-  address    String?
-  number     String?
-  city       String?
-  district   String?
-  state      String?
-  postalCode String?
+  name       String
+  address    String
+  number     String
+  city       String
+  district   String
+  state      String
+  postalCode String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }

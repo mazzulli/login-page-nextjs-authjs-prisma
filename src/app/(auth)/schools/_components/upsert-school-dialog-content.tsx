@@ -11,19 +11,23 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import ViaCepAPI from "@/app/api/viacep"
 import { toast } from "@/_hooks/use-toast"
-import { createSchool } from "@/_lib/_actions/school/create-school"
+import { upsertSchool } from "@/_lib/_actions/school/upsert-school"
 
 type FormSchema = z.infer<typeof schoolSchema>
 
 interface UpsertSchoolDialogContentProps {
+  defaultValues?: FormSchema
   onSuccess?: ()=>void
 }
 
-export const UpsertSchoolDialogContent = ({onSuccess}: UpsertSchoolDialogContentProps) => {    
+export const UpsertSchoolDialogContent = ({
+  defaultValues,
+  onSuccess
+}: UpsertSchoolDialogContentProps) => {    
   const form = useForm<FormSchema>({
     shouldUnregister: true, // limpa os dados do formulário ao fechar
     resolver: zodResolver(schoolSchema),        
-    defaultValues: {      
+    defaultValues: defaultValues ?? {      
       id:  "",
       name:  "",
       address:  "",
@@ -37,10 +41,12 @@ export const UpsertSchoolDialogContent = ({onSuccess}: UpsertSchoolDialogContent
   
   const { setValue } = form
 
+  const isEditing = !!defaultValues
+
   const onSubmit = async (data: FormSchema) => {
     // salvar no banco
     try {
-      await createSchool(data)
+      await upsertSchool({...data, id: defaultValues?.id })
       onSuccess?.()
       toast({
         title: "School created",  
@@ -89,7 +95,7 @@ export const UpsertSchoolDialogContent = ({onSuccess}: UpsertSchoolDialogContent
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <DialogHeader>
-            <DialogTitle>New venue</DialogTitle>
+            <DialogTitle>{isEditing ? "New" : "Edit"} venue</DialogTitle>
             <DialogDescription id="user-form">Fill in the form below to create a new venue</DialogDescription>            
           </DialogHeader>
             <FormField

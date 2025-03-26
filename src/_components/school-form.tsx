@@ -11,7 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import {z} from "zod"
 import ViaCepAPI from "@/app/api/viacep";
 import { toast } from "@/_hooks/use-toast"
-import { createSchool } from "@/_lib/_actions/school/create-school"
+import { createSchool } from "@/_lib/_actions/school/upsert-school"
 import { Loader2Icon } from "lucide-react"
 import { DialogClose } from "@radix-ui/react-dialog"
 import { Venue } from "@prisma/client"
