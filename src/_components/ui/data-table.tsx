@@ -33,7 +33,7 @@ import {
 import { Search } from "lucide-react";
 import { Button } from "@/_components/ui/button"
 import { Input } from "@/_components/ui/input"
-import { AddSchoolButton } from "@/app/(auth)/schools/_components/add-school-button"
+import { CreateSchoolButton } from "@/app/(auth)/schools/_components/create-school-button"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -79,7 +79,7 @@ export function DataTable<TData, TValue>({
             }            
           />          
         </div>       
-        <AddSchoolButton />
+        <CreateSchoolButton />
       </div>    
       {/* PAGINATION */}
       <div className="flex items-center justify-between space-x-2 py-4 mt-6">

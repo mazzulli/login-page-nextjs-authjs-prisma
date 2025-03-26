@@ -1,25 +1,25 @@
 "use client"
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription, DialogClose } from "@/_components/ui/dialog"
+import { DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription, DialogClose } from "@/_components/ui/dialog"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/_components/ui/form"
 import { Button } from "@/_components/ui/button"
 import { Input } from "@/_components/ui/input"
-import { Loader2Icon, PlusCircle } from "lucide-react"
+import { Loader2Icon } from "lucide-react"
 import { schoolSchema } from "@/_lib/models/school-schema"
 import {z} from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import ViaCepAPI from "@/app/api/viacep"
 import { toast } from "@/_hooks/use-toast"
-import { DialogTrigger } from "@radix-ui/react-dialog"
 import { createSchool } from "@/_lib/_actions/school/create-school"
-import { useState } from "react"
 
 type FormSchema = z.infer<typeof schoolSchema>
 
-export const AddSchoolButton = () => {  
-  const [dialogIsOpen, setDialogIsOpen] = useState(false)
+interface UpsertSchoolDialogContentProps {
+  onSuccess?: ()=>void
+}
 
+export const UpsertSchoolDialogContent = ({onSuccess}: UpsertSchoolDialogContentProps) => {    
   const form = useForm<FormSchema>({
     shouldUnregister: true, // limpa os dados do formulário ao fechar
     resolver: zodResolver(schoolSchema),        
@@ -41,7 +41,7 @@ export const AddSchoolButton = () => {
     // salvar no banco
     try {
       await createSchool(data)
-      setDialogIsOpen(false)
+      onSuccess?.()
       toast({
         title: "School created",  
         description: "School created successfully.",
@@ -69,24 +69,22 @@ export const AddSchoolButton = () => {
       } else {
         toast({
           title: "Zip code not found",
-          description: "Zip code not found, please check the number.",          
+          description: "Zip code not found. Please check the number.",          
         })
         setValue("address", "");
         setValue("city", "");
         setValue("district", "");
         setValue("state", "");
       };
+    }else{
+      toast({
+        title: "Ops...",  
+        description: "Invalid zip code. Please check the number.",
+      })
     }
   }
 
   return(
-    <Dialog open={dialogIsOpen} onOpenChange={setDialogIsOpen}>
-      <DialogTrigger asChild>
-      <Button className="bg-green-700 text-white">
-          <PlusCircle className="mr-2 h-4 w-4" />
-          New Venue
-        </Button>
-      </DialogTrigger>
       <DialogContent className="sm:max-w-[600px]">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -213,7 +211,6 @@ export const AddSchoolButton = () => {
             </DialogFooter>
           </form>
         </Form>
-      </DialogContent>
-    </Dialog>
+      </DialogContent> 
   )
 }
