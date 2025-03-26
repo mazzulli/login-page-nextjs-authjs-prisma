@@ -33,16 +33,19 @@ import {
 import { Search } from "lucide-react";
 import { Button } from "@/_components/ui/button"
 import { Input } from "@/_components/ui/input"
-import { CreateSchoolButton } from "@/app/(auth)/schools/_components/create-school-button"
+// import { CreateSchoolButton } from "@/app/(auth)/schools/_components/create-school-button"
+// import { CreateCollaboratorButton } from "@/app/(auth)/collaborators/_components/create-collaborator-button"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  controlButton: React.ReactNode
 }
 
 export function DataTable<TData, TValue>({
   columns,
-  data,
+  data,  
+  controlButton,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
@@ -78,8 +81,8 @@ export function DataTable<TData, TValue>({
               table.getColumn("name")?.setFilterValue(event.target.value)
             }            
           />          
-        </div>       
-        <CreateSchoolButton />
+        </div> 
+        {controlButton}      
       </div>    
       {/* PAGINATION */}
       <div className="flex items-center justify-between space-x-2 py-4 mt-6">

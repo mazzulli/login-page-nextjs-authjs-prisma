@@ -86,15 +86,15 @@ model Authenticator {
 
 model Collaborator {
   id          String   @id @default(uuid())
-  name        String?
-  email       String?  @unique
-  phoneNumber String?
-  document    String?
-  bankCode    String?
-  bankName    String?
-  agency      String?
-  account     String?
-  meiNumber   String?
+  name        String
+  email       String   @unique
+  phoneNumber String
+  document    String
+  bankCode    String
+  bankName    String
+  agency      String
+  account     String
+  meiNumber   String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -176,6 +176,12 @@ model TestSpeaking {
 
   collaborator   Collaborator @relation(fields: [collaboratorId], references: [id])
   collaboratorId String
+}
+
+model Banks {
+  id   String @id @default(uuid())
+  code Int
+  name String
 }
 
 enum EnumAccessType {
