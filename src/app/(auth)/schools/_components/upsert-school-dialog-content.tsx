@@ -49,9 +49,9 @@ export const UpsertSchoolDialogContent = ({
       await upsertSchool({...data, id: defaultValues?.id })
       onSuccess?.()      
       toast(isEditing ? { 
-        title:  "School updated",  
+        title: "Success!",  
         description: "School updated successfully.",
-      } : {title:  "School created",  
+      } : {title: "Success!",  
         description: "School created successfully.",})
       }  
     catch (error) {

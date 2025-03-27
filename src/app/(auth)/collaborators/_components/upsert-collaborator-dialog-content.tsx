@@ -48,9 +48,9 @@ export const UpsertCollaboratorDialogContent = ({
       await upsertCollaborator({...data, id: defaultValues?.id })
       onSuccess?.()      
       toast(isEditing ? { 
-        title:  "Collaborator updated",  
+        title: "Success!",  
         description: "Collaborator updated successfully.",
-      } : {title:  "Collaborator created",  
+      } : {title: "Success!",  
         description: "Collaborator created successfully.",})
       }  
     catch (error) {

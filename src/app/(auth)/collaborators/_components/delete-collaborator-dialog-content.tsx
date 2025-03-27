@@ -1,6 +1,6 @@
 import { AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/_components/ui/alert-dialog"
-import { deleteSchool } from "@/_lib/_actions/school/delete-school"
 import { toast } from "@/_hooks/use-toast"
+import { deleteCollaborator } from "@/_lib/_actions/collaborator/delete"
 
 interface DeleteCollaboratorDialogContentProps {
     collaboratorId: string
@@ -9,9 +9,9 @@ interface DeleteCollaboratorDialogContentProps {
 const DeleteCollaboratorDialogContent = ({collaboratorId}: DeleteCollaboratorDialogContentProps) => {
     const handleDelete = async () => {
         try {
-            await deleteSchool({id: collaboratorId})
+            await deleteCollaborator({id: collaboratorId})
             toast({
-                title: "Collaborator deleted",  
+                title: "Success!",  
                 description: "Collaborator deleted successfully.",
               })
         } catch (error) {

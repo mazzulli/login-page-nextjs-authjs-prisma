@@ -1,3 +1,5 @@
+import { CNPJValidation } from "@/_utils/cnpjValidation";
+import { cpfValidation } from "@/_utils/cpfValidation";
 import { z } from "zod";
 
 export const collaboratorSchema = z.object({
@@ -9,8 +11,8 @@ export const collaboratorSchema = z.object({
   phoneNumber: z.string().min(11, {
     message: "Is required.",
   }),
-  document: z.string().length(11, {
-    message: "Invalid number",
+  document: z.string().refine((val) => cpfValidation(val), {
+    message: "Invalid document",
   }),
   bankCode: z.string().max(3, {
     message: "Bank code must be 3 characters long.",
@@ -24,7 +26,9 @@ export const collaboratorSchema = z.object({
   account: z.string().refine((val) => /^[0-9]+(-?[0-9])?$/.test(val), {
     message: "Invalid account code. Use only numbers and a opcional digit.",
   }),
-  meiNumber: z.string(),
+  meiNumber: z.string().refine((val) => CNPJValidation(val), {
+    message: "Invalid number",
+  }),
 });
 
 export type CollaboratorSchema = z.infer<typeof collaboratorSchema>;

@@ -5,6 +5,9 @@ import { Collaborator } from "@prisma/client"
 import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown } from "lucide-react"
 import TableDropdownMenu from "./table-dropdown-menu"
+import { PhoneFormat } from "@/_utils/phoneFormat"
+import { CPFFormat } from "@/_utils/cpfFormat"
+import { CNPJFormat } from "@/_utils/cnpjFormat"
 
 export const tableColumns: ColumnDef<Collaborator>[] = [  
   {    
@@ -26,12 +29,22 @@ export const tableColumns: ColumnDef<Collaborator>[] = [
     header: "Email",
   },
   {
-    accessorKey: "phone",
+    accessorKey: "phoneNumber",
     header: "Phone",
+    cell: ({row})=> {
+      const phoneNumber = row.original.phoneNumber
+      const formattedPhoneNumber = PhoneFormat(phoneNumber)
+      return <span>{formattedPhoneNumber}</span>
+    }
   },
   {
     accessorKey: "document",
     header: "CPF",
+    cell: ({row}) => {
+      const document = row.original.document
+      const formattedDocument = CPFFormat(document)
+      return <span>{formattedDocument}</span>
+    }
   },
   {
     accessorKey: "bankCode",
@@ -52,6 +65,11 @@ export const tableColumns: ColumnDef<Collaborator>[] = [
   {
     accessorKey: "meiNumber",
     header: "MEI",
+    cell: ({row}) => {
+      const meiNumber = row.original.meiNumber
+      const formattedMeiNumber = CNPJFormat(meiNumber)
+      return <span>{formattedMeiNumber}</span>
+    }
   },
   {
     accessorKey: "actions",

@@ -2,17 +2,17 @@
 
 import db from "@/_lib/db/db";
 import {
-  deleteVenueSchema,
-  DeleteVenueSchema,
-} from "@/_lib/models/delete-venue-schema";
+  deleteCollaboratorSchema,
+  DeleteCollaboratorSchema,
+} from "@/_lib/models/delete-collaborator-schema";
 import { revalidatePath } from "next/cache";
 
-export const deleteCollaborator = async ({ id }: DeleteVenueSchema) => {
-  deleteVenueSchema.parse({ id });
-  await db.venue.delete({
+export const deleteCollaborator = async ({ id }: DeleteCollaboratorSchema) => {
+  deleteCollaboratorSchema.parse({ id });
+  await db.collaborator.delete({
     where: {
       id,
     },
   });
-  revalidatePath("/schools");
+  revalidatePath("/collaborators");
 };

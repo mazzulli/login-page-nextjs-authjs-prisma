@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react"
 import { DataTable } from "@/_components/ui/data-table";
 import { tableColumns } from "./_components/table-columns";
-import { getCollaborators } from "@/app/_data-access/school/get-collaborators";
+import { getCollaborators } from "@/app/_data-access/get-collaborators";
 import { CreateCollaboratorButton } from "./_components/create-collaborator-button";
 
 

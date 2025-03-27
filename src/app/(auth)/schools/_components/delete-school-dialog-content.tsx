@@ -11,7 +11,7 @@ const DeleteShcoolDialogContent = ({venueId}: DeleteShcoolDialogContentProps) =>
         try {
             await deleteSchool({id: venueId})
             toast({
-                title: "School deleted",  
+                title: "Success!",  
                 description: "School deleted successfully.",
               })
         } catch (error) {
