@@ -27,7 +27,6 @@ export const collaboratorSchema = z.object({
     .preprocess((val) => (val === "" ? undefined : val), z.string())
     .refine(
       (val) => {
-        console.log("VAL: ", typeof val);
         if (val === null) return true;
         return /^[0-9]+(-?[0-9])?$/.test(val);
       },

@@ -52,8 +52,7 @@ export const UpsertCollaboratorDialogContent = ({
   useEffect(() => {
     const fetchBanks = async () => {
       try {        
-        await fetch("api/banks").then((res) => res.json()).then((data) => setBanks(data))        
-        console.log("BANKS: ", JSON.stringify(banks))
+        await fetch("api/banks").then((res) => res.json()).then((data) => setBanks(data))                
       } catch (error) {
         toast(
           {
@@ -69,8 +68,7 @@ export const UpsertCollaboratorDialogContent = ({
 
   
   
-  const onSubmit = async (data: FormSchema) => {
-    // console.log("Dados do Form: ", data )
+  const onSubmit = async (data: FormSchema) => {    
     try {
       await upsertCollaborator({...data, id: defaultValues?.id })
       onSuccess?.()      

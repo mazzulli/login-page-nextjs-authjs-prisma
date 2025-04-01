@@ -12,6 +12,5 @@ export const getCollaborators = async (): Promise<Collaborator[]> => {
       name: "asc",
     },
   });
-  console.log(JSON.parse(JSON.stringify(result)));
   return result;
 };

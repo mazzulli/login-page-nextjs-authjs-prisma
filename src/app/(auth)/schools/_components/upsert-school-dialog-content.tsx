@@ -66,8 +66,7 @@ export const UpsertSchoolDialogContent = ({
   // search city and state by postalCode
   const fetchAddress = async (value: string) => {
     if (value.length === 8) {
-      const result = await ViaCepAPI(value);
-      console.log(JSON.stringify(result));
+      const result = await ViaCepAPI(value);      
       if(!result.erro) {        
         setValue("address", result.logradouro);
         setValue("city", result.localidade);
