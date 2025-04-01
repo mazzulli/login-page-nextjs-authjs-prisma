@@ -65,8 +65,6 @@ export const UpsertCollaboratorDialogContent = ({
     }      
     fetchBanks()
   }, [])
-
-  
   
   const onSubmit = async (data: FormSchema) => {    
     try {
@@ -92,6 +90,57 @@ export const UpsertCollaboratorDialogContent = ({
     }    
   }
  
+  // Format phone on change values
+  function formatPhoneNumber(value: string) {
+    // Remove all non-digit characters
+    const digits = value.replace(/\D/g, "")
+
+    // Apply the formatting based on the number of digits
+    if (digits.length <= 2) {
+      return digits
+    } else if (digits.length <= 7) {
+      return `(${digits.slice(0, 2)}) ${digits.slice(2)}`
+    } else {
+      return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7, 11)}`
+    }
+  }
+
+  // Format document on change values
+  function formatDocument(value: string) {
+    // Remove all non-digit characters
+    const digits = value.replace(/\D/g, "")
+
+    // Apply the formatting based on the number of digits
+    if (digits.length <= 3) {
+      return digits
+    } else if (digits.length <= 6) {
+      return `${digits.slice(0, 3)}.${digits.slice(3)}`
+    } else if (digits.length <= 9) {
+      return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6)}`
+    } else {
+      return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6, 9)}-${digits.slice(9, 11)}`
+    }
+  }
+
+  // CNPJ formatting function
+  function formatCNPJ(value: string) {
+    // Remove all non-digit characters
+    const digits = value.replace(/\D/g, "")
+
+    // Apply the formatting based on the number of digits
+    if (digits.length <= 2) {
+      return digits
+    } else if (digits.length <= 5) {
+      return `${digits.slice(0, 2)}.${digits.slice(2)}`
+    } else if (digits.length <= 8) {
+      return `${digits.slice(0, 2)}.${digits.slice(2, 5)}.${digits.slice(5)}`
+    } else if (digits.length <= 12) {
+      return `${digits.slice(0, 2)}.${digits.slice(2, 5)}.${digits.slice(5, 8)}/${digits.slice(8)}`
+    } else {
+      return `${digits.slice(0, 2)}.${digits.slice(2, 5)}.${digits.slice(5, 8)}/${digits.slice(8, 12)}-${digits.slice(12, 14)}`
+    }
+  }
+
   return(
       <DialogContent className="sm:max-w-[600px]">
         <Form {...form}>
@@ -137,7 +186,20 @@ export const UpsertCollaboratorDialogContent = ({
                   <FormItem>
                     <FormLabel>Phone</FormLabel>
                     <FormControl>
-                      <Input placeholder="(11) 12345-1234" {...field} />
+                      <Input 
+                        placeholder="(11) 12345-1234" 
+                        {...field}
+                        value={formatPhoneNumber(field.value)}
+                        onChange={(e) => {
+                          // Get only digits from the input
+                          const digits = e.target.value.replace(/\D/g, "")
+                          // Limit to 11 digits
+                          const limitedDigits = digits.slice(0, 11)
+                          // Update the field with raw digits
+                          field.onChange(limitedDigits)
+                        }}
+                        inputMode="numeric"
+                         />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -152,7 +214,20 @@ export const UpsertCollaboratorDialogContent = ({
                   <FormItem>
                     <FormLabel>CPF</FormLabel>
                     <FormControl>
-                      <Input placeholder="123.123.123-12" {...field} />
+                      <Input 
+                        placeholder="123.123.123-12" 
+                        {...field} 
+                        value={formatDocument(field.value)}
+                        onChange={(e) => {
+                          // Get only digits from the input
+                          const digits = e.target.value.replace(/\D/g, "")
+                          // Limit to 11 digits
+                          const limitedDigits = digits.slice(0, 11)
+                          // Update the field with raw digits
+                          field.onChange(limitedDigits)
+                        }}
+                        inputMode="numeric"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -165,7 +240,7 @@ export const UpsertCollaboratorDialogContent = ({
             <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
               <FormField
                 control={form.control}
-                name="bankId"
+                name="bankName"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Bank</FormLabel>
@@ -176,8 +251,9 @@ export const UpsertCollaboratorDialogContent = ({
                             variant="outline"
                             role="combobox"
                             className={"text-muted-foreground justify-between"}
-                          >
-                            {field.value ? banks.find((bank) => bank.id === field.value)?.name : "Select a bank"}
+                          >                            
+                            {field.value  ? 
+                               banks.find((bank) => bank.name === field.value)?.name : "Select a bank"}
                             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                           </Button>
                         </FormControl>
@@ -195,7 +271,8 @@ export const UpsertCollaboratorDialogContent = ({
                                   onSelect={() => {
                                     form.setValue("bankId", bank.id)                                              
                                     form.setValue("bankCode", String(bank.code))
-                                    form.setValue("bankName", bank.name)
+                                    form.setValue("bankName", bank.name)                                        
+                                    
                                     setOpenBank(false);
                                   }}
                                 >
@@ -246,7 +323,20 @@ export const UpsertCollaboratorDialogContent = ({
                   <FormItem>
                     <FormLabel>MEI</FormLabel>
                     <FormControl>
-                      <Input placeholder="00.000.000/0000-00" {...field}  />
+                      <Input 
+                        placeholder="00.000.000/0000-00" 
+                        {...field}  
+                        value={formatCNPJ(field.value ? field.value : '')}
+                        onChange={(e) => {
+                          // Get only digits from the input
+                          const digits = e.target.value.replace(/\D/g, "")
+                          // Limit to 11 digits
+                          const limitedDigits = digits.slice(0, 14)
+                          // Update the field with raw digits
+                          field.onChange(limitedDigits)
+                        }}
+                        inputMode="numeric"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
