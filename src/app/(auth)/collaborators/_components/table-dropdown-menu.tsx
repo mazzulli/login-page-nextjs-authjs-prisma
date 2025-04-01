@@ -11,7 +11,7 @@ import { useState } from "react";
 import { Collaborator } from "@prisma/client";
 
 interface CollaboratorTableDropdownMenuProps {
-  collaborator: Collaborator;
+  collaborator: Collaborator;  
 }
 
 const TableDropdownMenu = ({collaborator}: CollaboratorTableDropdownMenuProps) => {     
@@ -51,17 +51,17 @@ const TableDropdownMenu = ({collaborator}: CollaboratorTableDropdownMenuProps) =
              </DropdownMenu>
              <UpsertCollaboratorDialogContent 
                defaultValues={{
-                 name: collaborator.name,
-                 email: collaborator.email,
-                 phoneNumber: collaborator.phoneNumber,
-                 document: collaborator.document,
-                 bankCode: collaborator.bankCode,
-                 bankName: collaborator.bankName,
-                 agency: collaborator.agency,
-                 account: collaborator.account,
-                 meiNumber: collaborator.meiNumber,
-                 id: collaborator.id,
-               }} 
+                id: collaborator.id, 
+                name: collaborator.name,
+                email: collaborator.email,
+                phoneNumber: collaborator.phoneNumber,
+                document: collaborator.document,
+                bankCode: collaborator.bankCode  || "",
+                bankName: collaborator.bankName  || "",
+                agency: collaborator.agency  || "",
+                account: collaborator.account || "",
+                meiNumber: collaborator.meiNumber || "",                 
+               }}                
                onSuccess={()=> setEditDialogOpen(false)}
              />
              <DeleteCollaboratorDialogContent collaboratorId={collaborator.id} />

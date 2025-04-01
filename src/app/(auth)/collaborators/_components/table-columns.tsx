@@ -47,12 +47,22 @@ export const tableColumns: ColumnDef<Collaborator>[] = [
     }
   },
   {
-    accessorKey: "bankCode",
+    accessorKey: "banks.code",
     header: "Bank Code",
+    cell: ({row})=>{
+      const bankCode = row.original.bankCode
+      if(bankCode===null || bankCode===undefined) return <span> </span>
+      return <span>{bankCode}</span>
+    }
   },
   {
-    accessorKey: "bankName",
+    accessorKey: "banks.name",
     header: "Bank Name",
+    cell: ({row})=>{
+      const bankName = row.original.bankName
+      if(bankName===null || bankName===undefined) return <span> </span>
+      return <span>{bankName}</span>
+    }
   },
   {
     accessorKey: "agency",
@@ -67,8 +77,10 @@ export const tableColumns: ColumnDef<Collaborator>[] = [
     header: "MEI",
     cell: ({row}) => {
       const meiNumber = row.original.meiNumber
-      const formattedMeiNumber = CNPJFormat(meiNumber)
+      if (meiNumber) {
+      const formattedMeiNumber = CNPJFormat(meiNumber)      
       return <span>{formattedMeiNumber}</span>
+      }
     }
   },
   {

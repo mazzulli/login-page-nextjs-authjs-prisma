@@ -90,6 +90,8 @@ model Collaborator {
   email       String   @unique
   phoneNumber String
   document    String   @unique
+  bankCode    String?
+  bankName    String?
   agency      String?
   account     String?
   meiNumber   String?

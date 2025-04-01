@@ -33,8 +33,6 @@ import {
 import { Search } from "lucide-react";
 import { Button } from "@/_components/ui/button"
 import { Input } from "@/_components/ui/input"
-// import { CreateSchoolButton } from "@/app/(auth)/schools/_components/create-school-button"
-// import { CreateCollaboratorButton } from "@/app/(auth)/collaborators/_components/create-collaborator-button"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]

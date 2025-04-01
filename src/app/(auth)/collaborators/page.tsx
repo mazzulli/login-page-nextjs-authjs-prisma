@@ -9,14 +9,13 @@ import { tableColumns } from "./_components/table-columns";
 import { getCollaborators } from "@/app/_data-access/get-collaborators";
 import { CreateCollaboratorButton } from "./_components/create-collaborator-button";
 
-
 export default async function Collaborators() {
   const session = await auth();
     
   if (!session) redirect("/sign-in");
 
   const collaborators = await getCollaborators();
-
+  
   return (
     <DashboardLayout>
       <div className="p-6">

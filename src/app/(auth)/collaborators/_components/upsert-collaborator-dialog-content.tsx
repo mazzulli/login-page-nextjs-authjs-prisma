@@ -13,17 +13,10 @@ import { upsertCollaborator } from "@/_lib/_actions/collaborator/upsert"
 import { collaboratorSchema } from "@/_lib/models/collaborator-schema"
 import { Popover, PopoverContent, PopoverTrigger } from "@/_components/ui/popover"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/_components/ui/command"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { Banks } from "@prisma/client"
 
 type FormSchema = z.infer<typeof collaboratorSchema>
-
-const languages = [
-  { label: "1 - Banco do Brasil", value: "aa694cc8-a66b-47f7-8f23-00643546feac" },
-  { label: "33 - Banco Santander", value: "54d0993b-d3b3-4eff-afde-0e1c0eccb94a" },
-  { label: "104 - Caixa Economica", value: "64d7d6c0-addd-4ae8-b6be-b405013b326e" },
-  { label: "237 - Banco Bradesco", value: "6054561d-c1d7-4f62-ac88-ea676bddfc7c" },
-] as const
-
 interface UpsertCollaboratorDialogContentProps {
   defaultValues?: FormSchema
   onSuccess?: ()=>void
@@ -43,6 +36,8 @@ export const UpsertCollaboratorDialogContent = ({
       document:  "",
       phoneNumber:  "",
       bankId:  "",      
+      bankName:  "",
+      bankCode: "",
       agency:  "",
       account:  "",
       meiNumber:  "",
@@ -51,7 +46,29 @@ export const UpsertCollaboratorDialogContent = ({
   
   const isEditing = !!defaultValues
   const [openBank, setOpenBank] = useState(false)
+  const [banks, setBanks] = useState<Banks[]>([])
 
+  // Fetch banks on component mount
+  useEffect(() => {
+    const fetchBanks = async () => {
+      try {        
+        await fetch("api/banks").then((res) => res.json()).then((data) => setBanks(data))        
+        console.log("BANKS: ", JSON.stringify(banks))
+      } catch (error) {
+        toast(
+          {
+            title: "Ops...",
+            description: "Can't fetch banks.",
+          }
+        )
+        console.error("ERROR TO FETCH BANKS: ",error)
+      }
+    }      
+    fetchBanks()
+  }, [])
+
+  
+  
   const onSubmit = async (data: FormSchema) => {
     // console.log("Dados do Form: ", data )
     try {
@@ -147,7 +164,7 @@ export const UpsertCollaboratorDialogContent = ({
             <div className="w-full pt-4">
               <span className="font-semibold">Bank Informations</span>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
               <FormField
                 control={form.control}
                 name="bankId"
@@ -155,37 +172,36 @@ export const UpsertCollaboratorDialogContent = ({
                   <FormItem>
                     <FormLabel>Bank</FormLabel>
                     <Popover open={openBank} onOpenChange={setOpenBank}>
-                      <PopoverTrigger asChild>
+                      <PopoverTrigger className={"w-full"} asChild>
                         <FormControl>
                           <Button
                             variant="outline"
-                            // role="combobox"
-                            className={"text-muted-foreground w-full"}
+                            role="combobox"
+                            className={"text-muted-foreground justify-between"}
                           >
-                            {field.value
-                              ? languages.find(
-                                  (language) => language.value === field.value
-                                )?.label
-                              : "Select bank"}
+                            {field.value ? banks.find((bank) => bank.id === field.value)?.name : "Select a bank"}
                             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                           </Button>
                         </FormControl>
                       </PopoverTrigger>
-                      <PopoverContent className="w-[200px] p-0">
-                        <Command>
-                          <CommandInput placeholder="Search bank..." />
+                      <PopoverContent className="w-full p-0">
+                        <Command className="w-[547]">
+                          <CommandInput placeholder="Search bank..." className="w-full p-0" />
                           <CommandList>
                             <CommandEmpty>No bank found.</CommandEmpty>
                             <CommandGroup>
-                              {languages.map((language) => (
-                                <CommandItem
-                                  value={language.label}
-                                  key={language.value}
+                              {banks.map((bank) => (
+                                <CommandItem                                   
+                                  value={bank.code + " - " + bank.name}
+                                  key={bank.id}
                                   onSelect={() => {
-                                    form.setValue("bankId", language.value)                                    
+                                    form.setValue("bankId", bank.id)                                              
+                                    form.setValue("bankCode", String(bank.code))
+                                    form.setValue("bankName", bank.name)
+                                    setOpenBank(false);
                                   }}
                                 >
-                                  {language.label}                                
+                                  {bank.name}                                
                                 </CommandItem>
                               ))}
                             </CommandGroup>
@@ -197,7 +213,7 @@ export const UpsertCollaboratorDialogContent = ({
                   </FormItem>
                 )}
               />
-            </div>
+            </div>            
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pb-10">
               <FormField
                 control={form.control}
