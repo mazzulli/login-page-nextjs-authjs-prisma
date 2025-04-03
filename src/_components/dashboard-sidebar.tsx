@@ -37,13 +37,13 @@ const navItems: NavItem[] = [
     icon: School,
   },
   {
-    title: "Test Application",
-    href: "/test-application",
+    title: "Exam Application",
+    href: "/exam-application",
     icon: FileText,
   },
   {
-    title: "Test Configurations",
-    href: "/test-configurations",
+    title: "Exam Configurations",
+    href: "/exam-configurations",
     icon: Settings,
   },
 ]

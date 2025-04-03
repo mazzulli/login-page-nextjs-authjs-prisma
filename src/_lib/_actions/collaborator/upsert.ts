@@ -33,5 +33,5 @@ export const upsertCollaborator = async (data: CollaboratorSchema) => {
     },
   });
 
-  revalidatePath("/app/(auth)/collaborators");
+  revalidatePath("/collaborators");
 };

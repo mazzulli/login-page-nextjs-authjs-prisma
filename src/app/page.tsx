@@ -25,7 +25,7 @@ export default async function Home() {
                 <span className="font-medium">56</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">Test Applications</span>
+                <span className="text-sm text-muted-foreground">Exam Applications</span>
                 <span className="font-medium">89</span>
               </div>
             </div>

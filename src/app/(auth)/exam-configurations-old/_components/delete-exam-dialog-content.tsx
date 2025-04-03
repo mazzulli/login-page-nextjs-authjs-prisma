@@ -1,18 +1,26 @@
+"use client"
+
 import { AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/_components/ui/alert-dialog"
 import { toast } from "@/_hooks/use-toast"
-import { deleteCollaborator } from "@/_lib/_actions/collaborator/delete"
+import { deleteExam} from "@/_lib/_actions/exams/delete-exam"
+import { revalidatePath } from "next/cache"
+import { useRouter } from "next/router"
 
-interface DeleteCollaboratorDialogContentProps {
-    collaboratorId: string
+interface DeleteExamDialogContentProps {
+    examId: string
 }
 
-const DeleteCollaboratorDialogContent = ({collaboratorId}: DeleteCollaboratorDialogContentProps) => {
+const DeleteExamDialogContent = ({examId}: DeleteExamDialogContentProps) => {    
+    const router = useRouter();
+    
     const handleDelete = async () => {
         try {
-            await deleteCollaborator({id: collaboratorId})
+            await deleteExam({id: examId})
+            revalidatePath("/exam-configurations")
+            router.reload()
             toast({
                 title: "Success!",  
-                description: "Collaborator deleted successfully.",
+                description: "Exam deleted successfully.",
               })
         } catch (error) {
             console.error(error)
@@ -20,6 +28,9 @@ const DeleteCollaboratorDialogContent = ({collaboratorId}: DeleteCollaboratorDia
                 title: "Error",  
                 description: "Oh no! Something went wrong.",
             })
+        } finally {
+            revalidatePath("/exam-configurations")
+            router.reload()
         }
     }
     return ( 
@@ -27,7 +38,7 @@ const DeleteCollaboratorDialogContent = ({collaboratorId}: DeleteCollaboratorDia
             <AlertDialogHeader>
                 <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                 <AlertDialogDescription>
-                    Are you sure you want to delete this collaborator? This action cannot be undone.
+                    Are you sure you want to delete this exam? This action cannot be undone.
                 </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
@@ -38,4 +49,4 @@ const DeleteCollaboratorDialogContent = ({collaboratorId}: DeleteCollaboratorDia
      );
 }
  
-export default DeleteCollaboratorDialogContent;
+export default DeleteExamDialogContent;

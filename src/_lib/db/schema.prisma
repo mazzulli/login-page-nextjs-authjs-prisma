@@ -98,10 +98,10 @@ model Collaborator {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  tests            Test[]
-  testSupervisors  TestSupervisor[]
-  testInvigilators TestInvigilator[]
-  testSpeakings    TestSpeaking[]
+  tests            Exam[]
+  testSupervisors  ExamSupervisor[]
+  testInvigilators ExamInvigilator[]
+  testSpeakings    ExamSpeaking[]
 
   banks  Banks?  @relation(fields: [bankId], references: [id])
   bankId String?
@@ -120,15 +120,15 @@ model Venue {
   updatedAt  DateTime @updatedAt
 }
 
-model TestValue {
+model ExamValue {
   id        String   @id @default(uuid())
-  name      String?
-  value     Float?
+  name      String
+  price     Decimal  @db.Decimal(10, 2)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model Test {
+model Exam {
   id              String   @id @default(uuid())
   idVenue         String
   date            DateTime
@@ -140,9 +140,9 @@ model Test {
   collaboratorId String
 }
 
-model TestSupervisor {
+model ExamSupervisor {
   id             String   @id @default(uuid())
-  idTest         String
+  idExam         String
   idCollaborator String
   qtyHours       Float
   extraValue     Float
@@ -153,9 +153,9 @@ model TestSupervisor {
   collaboratorId String
 }
 
-model TestInvigilator {
+model ExamInvigilator {
   id             String   @id @default(uuid())
-  idTest         String
+  idExam         String
   idCollaborator String
   qtyHours       Float
   extraValue     Float
@@ -166,12 +166,12 @@ model TestInvigilator {
   collaboratorId String
 }
 
-model TestSpeaking {
+model ExamSpeaking {
   id             String   @id @default(uuid())
-  idTest         String
+  idExam         String
   idCollaborator String
-  idTestValue    String
-  TestValue      Float
+  idExamValue    String
+  examValue      Float
   qtyHours       Float
   extraValue     Float
   createdAt      DateTime @default(now())
