@@ -96,7 +96,7 @@ export const UpsertExamDialogContent = ({
                       {isEditing ? 
                         <Input
                           placeholder="R$ 0,00"
-                          value= {String(value)}
+                          value= {(String(value))}
                           onChange={(e) => {
                             const rawValue = e.target.value.replace(/\D/g, ""); // remove tudo que não seja numero
                             onChange(rawValue);
