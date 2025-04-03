@@ -2,16 +2,16 @@
 
 import type React from "react"
 import { Dialog } from "@/_components/ui/dialog"
-import { ExamValue } from "@prisma/client"
 import { UpsertExamDialogContent } from "./upsert-exam-dialog-content"
+import { ExamSchema } from "@/_lib/models/exam-schema"
 
 interface EditExamDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  defaultValues: ExamValue
+  defaultValues: ExamSchema
 }
 
-export default function EditExamDialog({ open, onOpenChange, defaultValues }: EditExamDialogProps) {  
+export default function EditExamDialog({ open, onOpenChange, defaultValues }: EditExamDialogProps) {    
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <UpsertExamDialogContent defaultValues={JSON.parse(JSON.stringify(defaultValues))} />

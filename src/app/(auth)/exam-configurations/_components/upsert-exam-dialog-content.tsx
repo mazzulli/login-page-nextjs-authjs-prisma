@@ -26,7 +26,7 @@ export const UpsertExamDialogContent = ({
   const form = useForm<FormSchema>({
     shouldUnregister: true, // limpa os dados do formulário ao fechar
     resolver: zodResolver(examSchema),        
-    defaultValues: defaultValues ?? {      
+    defaultValues: defaultValues ?? {
       id:  "",
       name:  "",
       price:  "",
@@ -34,8 +34,6 @@ export const UpsertExamDialogContent = ({
   })
   
   const isEditing = !!defaultValues  
-
-  if(defaultValues) console.log("submit: " , JSON.parse(JSON.stringify(defaultValues)))
 
   const onSubmit = async (data: FormSchema) => {    
     try {
@@ -91,18 +89,29 @@ export const UpsertExamDialogContent = ({
                 <FormField
                   control={form.control}
                   name="price"
-                  render={({ field: { onChange, value } }) => (
+                  render={({ field: { onChange, value }} ) => (
                     <FormItem>
-                      <FormLabel>Value</FormLabel>
+                      <FormLabel>Price</FormLabel>
                       <FormControl>
-                      <Input
-                        placeholder="R$ 0,00"
-                        value={CurrencyInputFormat(String(value))}
-                        onChange={(e) => {
-                          const rawValue = e.target.value.replace(/\D/g, "");
-                          onChange(rawValue);
-                        }}
-                      />                    
+                      {isEditing ? 
+                        <Input
+                          placeholder="R$ 0,00"
+                          value= {String(value)}
+                          onChange={(e) => {
+                            const rawValue = e.target.value.replace(/\D/g, ""); // remove tudo que não seja numero
+                            onChange(rawValue);
+                          }}
+                        /> 
+                        :
+                        <Input
+                          placeholder="R$ 0,00"
+                          value= {CurrencyInputFormat(String(value))}
+                          onChange={(e) => {
+                            const rawValue = e.target.value.replace(/\D/g, ""); // remove tudo que não seja numero
+                            onChange(rawValue);
+                          }}
+                        /> 
+                      }                   
                       </FormControl>
                       <FormMessage />
                     </FormItem>

@@ -64,7 +64,7 @@ export default function ExamCards({ exams: examData }: ExamCardsProps) {
                 {new Intl.NumberFormat("pt-BR", {
                   style: "currency",
                   currency: "BRL",
-                }).format(Number(exam.price)/100)}
+                }).format(Number(exam.price))}
               </p>
             </CardContent>
             <CardFooter className="flex justify-between pt-2 border-t">
