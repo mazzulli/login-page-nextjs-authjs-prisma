@@ -99,10 +99,10 @@ model Collaborator {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  tests            Exam[]
-  testSupervisors  ExamSupervisor[]
-  testInvigilators ExamInvigilator[]
-  testSpeakings    ExamSpeaking[]
+  exams            Exam[]
+  examSupervisors  ExamSupervisor[]
+  examInvigilators ExamInvigilator[]
+  examSpeakings    ExamSpeaking[]
 
   banks  Banks?  @relation(fields: [bankId], references: [id])
   bankId String?
@@ -119,6 +119,8 @@ model Venue {
   postalCode String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+
+  exams Exam[]
 }
 
 model ExamValue {
@@ -131,56 +133,70 @@ model ExamValue {
 
 model Exam {
   id              String   @id @default(uuid())
-  idVenue         String
   date            DateTime
-  testDescription String
+  examDescription String
   isClosed        Boolean
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
+  venue   Venue  @relation(fields: [venueId], references: [id])
+  venueId String
+
   collaborator   Collaborator @relation(fields: [collaboratorId], references: [id])
   collaboratorId String
+
+  supervisor   ExamSupervisor @relation(fields: [supervisorId], references: [id])
+  supervisorId String
+
+  invigilator   ExamInvigilator @relation(fields: [invigilatorId], references: [id])
+  invigilatorId String
+
+  speaking    ExamSpeaking @relation(fields: [speadkingId], references: [id])
+  speadkingId String
 }
 
 model ExamSupervisor {
-  id             String   @id @default(uuid())
-  idExam         String
-  idCollaborator String
-  qtyHours       Float
-  extraValue     Float
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id         String   @id @default(uuid())
+  examId     String
+  qtyHours   Float
+  extraValue Float
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   collaborator   Collaborator @relation(fields: [collaboratorId], references: [id])
   collaboratorId String
+
+  exams Exam[]
 }
 
 model ExamInvigilator {
-  id             String   @id @default(uuid())
-  idExam         String
-  idCollaborator String
-  qtyHours       Float
-  extraValue     Float
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id         String   @id @default(uuid())
+  examId     String
+  qtyHours   Float
+  extraValue Float
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   collaborator   Collaborator @relation(fields: [collaboratorId], references: [id])
   collaboratorId String
+
+  exams Exam[]
 }
 
 model ExamSpeaking {
-  id             String   @id @default(uuid())
-  idExam         String
-  idCollaborator String
-  idExamValue    String
-  examValue      Float
-  qtyHours       Float
-  extraValue     Float
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id         String   @id @default(uuid())
+  examId     String
+  examName   String
+  examPrice  Decimal
+  qtyHours   Decimal
+  extraValue Decimal
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   collaborator   Collaborator @relation(fields: [collaboratorId], references: [id])
   collaboratorId String
+
+  exams Exam[]
 }
 
 model Banks {
