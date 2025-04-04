@@ -24,7 +24,8 @@ model User {
 
   // included for this winner project
   phoneNumber String?
-  accessType  EnumAccessType?
+  accessType  String?
+  isActive    Boolean @default(true)
 }
 
 model Account {
@@ -133,6 +134,7 @@ model Exam {
   idVenue         String
   date            DateTime
   testDescription String
+  isClosed        Boolean
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 

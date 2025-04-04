@@ -1,4 +1,6 @@
+import DashboardCard from "@/_components/dashboard-card";
 import { DashboardLayout } from "@/_components/dashboard-layout"
+import { PieChartUsersType } from "@/_components/pie-chart-users-type";
 import { auth } from "@/_lib/auth";
 import { redirect } from "next/navigation";
 
@@ -12,7 +14,7 @@ export default async function Home() {
         <p className="text-muted-foreground">
           Welcome to your dashboard. Select an option from the sidebar to get started.
         </p>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {/* <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           <div className="rounded-lg border bg-card p-6 shadow">
             <h3 className="text-lg font-medium">Quick Stats</h3>
             <div className="mt-4 grid gap-2">
@@ -64,8 +66,13 @@ export default async function Home() {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
+      <div className="grid grid-cols-2 grid-rows-1 gap-6 overflow-hidden p-6">
+        <PieChartUsersType />
+        <DashboardCard />        
+      </div>
+      
     </DashboardLayout>
   )
 }
