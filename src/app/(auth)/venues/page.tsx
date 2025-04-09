@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react"
 import { DataTable } from "@/_components/ui/data-table";
 import { schoolTableColumns } from "./_components/table-columns";
-import { getSchools } from "@/app/_data-access/get-schools";
+import { getVenues } from "@/app/_data-access/get-venues";
 import { CreateSchoolButton } from "./_components/create-school-button";
 
 export default async function Users() {
@@ -14,7 +14,7 @@ export default async function Users() {
     
   if (!session) redirect("/sign-in");
 
-  const schools = await getSchools();
+  const venues = await getVenues();
 
   return (
     <DashboardLayout>
@@ -24,7 +24,7 @@ export default async function Users() {
             <h1 className="text-3xl font-bold mb-6">Venues</h1>                     
           </div>
           <Suspense fallback={<div>Loading...</div>}>            
-            <DataTable columns={schoolTableColumns} data={JSON.parse(JSON.stringify(schools))} controlButton={<CreateSchoolButton />} />
+            <DataTable columns={schoolTableColumns} data={JSON.parse(JSON.stringify(venues))} controlButton={<CreateSchoolButton />} />
           </Suspense>
           <Toaster />
       </div>

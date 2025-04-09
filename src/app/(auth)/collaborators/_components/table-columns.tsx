@@ -39,7 +39,7 @@ export const tableColumns: ColumnDef<Collaborator>[] = [
   },
   {
     accessorKey: "document",
-    header: "CPF",
+    header: "CPF",    
     cell: ({row}) => {
       const document = row.original.document
       const formattedDocument = CPFFormat(document)
@@ -82,6 +82,10 @@ export const tableColumns: ColumnDef<Collaborator>[] = [
       return <span>{formattedMeiNumber}</span>
       }
     }
+  },
+  {
+    accessorKey: "accessType",
+    header: "Category",
   },
   {
     accessorKey: "actions",

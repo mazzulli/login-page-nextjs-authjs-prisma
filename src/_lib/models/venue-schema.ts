@@ -1,9 +1,9 @@
 import { z } from "zod";
 
-export const schoolSchema = z.object({
+export const venueSchema = z.object({
   id: z.string().uuid().optional(),
   name: z.string().min(2, {
-    message: "School name must be at least 2 characters long.",
+    message: "Venue must be at least 2 characters long.",
   }),
   address: z.string().min(2, {
     message: "Address must be at least 2 characters long.",
@@ -30,4 +30,4 @@ export const schoolSchema = z.object({
     }),
 });
 
-export type SchoolSchema = z.infer<typeof schoolSchema>;
+export type VenueSchema = z.infer<typeof venueSchema>;

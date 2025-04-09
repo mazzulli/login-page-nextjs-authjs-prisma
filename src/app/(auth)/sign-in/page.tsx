@@ -12,7 +12,7 @@ const Page = async () => {
 
   return (
     <div className="w-full max-w-sm mx-auto space-y-6">
-      <h1 className="text-2xl font-bold text-center mb-6">WINNER IDIOMS</h1>
+      <h1 className="text-2xl font-bold text-center mb-6">WINNER IDIOMAS</h1>
       <h2 className="text-2xl font-semibold text-center mb-6">Sign in</h2>
 
       

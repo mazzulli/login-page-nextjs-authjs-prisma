@@ -5,17 +5,17 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Button } from "@/_components/ui/button"
 import { Input } from "@/_components/ui/input"
 import { Loader2Icon } from "lucide-react"
-import { schoolSchema } from "@/_lib/models/school-schema"
+import { venueSchema } from "@/_lib/models/venue-schema"
 import {z} from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import ViaCepAPI from "@/app/api/viacep"
 import { toast } from "@/_hooks/use-toast"
-import { upsertSchool } from "@/_lib/_actions/school/upsert-school"
+import { upsertVenue } from "@/_lib/_actions/venue/upsert-venue"
 
-type FormSchema = z.infer<typeof schoolSchema>
+type FormSchema = z.infer<typeof venueSchema>
 
-interface UpsertSchoolDialogContentProps {
+interface UpsertVenueDialogContentProps {
   defaultValues?: FormSchema
   onSuccess?: ()=>void
 }
@@ -23,10 +23,10 @@ interface UpsertSchoolDialogContentProps {
 export const UpsertSchoolDialogContent = ({
   defaultValues,
   onSuccess
-}: UpsertSchoolDialogContentProps) => {    
+}: UpsertVenueDialogContentProps) => {    
   const form = useForm<FormSchema>({
     shouldUnregister: true, // limpa os dados do formulário ao fechar
-    resolver: zodResolver(schoolSchema),        
+    resolver: zodResolver(venueSchema),        
     defaultValues: defaultValues ?? {      
       id:  "",
       name:  "",
@@ -46,13 +46,13 @@ export const UpsertSchoolDialogContent = ({
   const onSubmit = async (data: FormSchema) => {
     // salvar no banco
     try {
-      await upsertSchool({...data, id: defaultValues?.id })
+      await upsertVenue({...data, id: defaultValues?.id })
       onSuccess?.()      
       toast(isEditing ? { 
         title: "Success!",  
-        description: "School updated successfully.",
+        description: "Venue updated successfully.",
       } : {title: "Success!",  
-        description: "School created successfully.",})
+        description: "Venue created successfully.",})
       }  
     catch (error) {
       console.error(error)

@@ -24,12 +24,19 @@ export const upsertCollaborator = async (data: CollaboratorSchema) => {
     }
   }
 
+  // Convert array to comma-separated string
+  const accessTypeString = data.accessType.join(", ");
+
   await db.collaborator.upsert({
     where: { id: data.id ?? "" },
-    update: data,
+    update: {
+      ...data,
+      accessType: accessTypeString,
+    },
     create: {
       ...data,
       bankId: data.bankId === "" ? null : data.bankId,
+      accessType: accessTypeString,
     },
   });
 

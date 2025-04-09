@@ -15,42 +15,33 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/_components/ui/popove
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/_components/ui/command"
 import { useEffect, useState } from "react"
 import { Banks } from "@prisma/client"
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/_components/ui/dropdown-menu"
-import { cn } from "@/_lib/utils"
+import { examSchema } from "@/_lib/models/exam-schema"
+import { upsertExam } from "@/_lib/_actions/exams/upsert-exam"
 
-
-type FormSchema = z.infer<typeof collaboratorSchema>
-interface UpsertCollaboratorDialogContentProps {
+type FormSchema = z.infer<typeof examSchema>
+interface UpsertExamDialogContentProps {
   defaultValues?: FormSchema
   onSuccess?: ()=>void
 }
 
-export const UpsertCollaboratorDialogContent = ({
+export const UpsertExamDialogContent = ({
   defaultValues,
   onSuccess
-}: UpsertCollaboratorDialogContentProps) => {    
+}: UpsertExamDialogContentProps) => {    
   const form = useForm<FormSchema>({
     shouldUnregister: true, // limpa os dados do formulário ao fechar
-    resolver: zodResolver(collaboratorSchema),        
+    resolver: zodResolver(examSchema),        
     defaultValues: defaultValues ?? {      
       id:  "",
-      name:  "",
-      email:  "",
-      document:  "",
-      phoneNumber:  "",
-      bankId:  "",      
-      bankName:  "",
-      bankCode: "",
-      agency:  "",
-      account:  "",
-      meiNumber:  "",
-      accessType:  [],
+      idVenue: "",
+      venue: "",
+      examDescription: "",
+      
     },
   })
   
   const isEditing = !!defaultValues
   const [openBank, setOpenBank] = useState(false)
-  const [open, setOpen] = useState(false)
   const [banks, setBanks] = useState<Banks[]>([])
 
   // Fetch banks on component mount
@@ -73,7 +64,7 @@ export const UpsertCollaboratorDialogContent = ({
   
   const onSubmit = async (data: FormSchema) => {    
     try {
-      await upsertCollaborator({...data, id: defaultValues?.id })
+      await upsertExam({...data, id: defaultValues?.id })
       onSuccess?.()      
       toast(isEditing ? { 
         title: "Success!",  
@@ -145,12 +136,6 @@ export const UpsertCollaboratorDialogContent = ({
       return `${digits.slice(0, 2)}.${digits.slice(2, 5)}.${digits.slice(5, 8)}/${digits.slice(8, 12)}-${digits.slice(12, 14)}`
     }
   }
-
-  const roles = [
-    { label: "Supervisor", value: "Supervisor" },
-    { label: "Invigilator", value: "Invigilator" },
-    { label: "Speaking", value: "Speaking" },
-  ]
 
   return(
       <DialogContent className="sm:max-w-[600px]">
@@ -241,65 +226,9 @@ export const UpsertCollaboratorDialogContent = ({
                       />
                     </FormControl>
                     <FormMessage />
-                  </FormItem>                  
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="accessType"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Access Type</FormLabel>
-                    <DropdownMenu open={open} onOpenChange={setOpen}>
-                      <FormControl>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="outline"
-                            role="combobox"
-                            aria-expanded={open}
-                            className={cn(
-                              "w-full justify-between",
-                              !field.value.length && "text-muted-foreground"
-                            )}                            
-                          >
-                            {field.value.length
-                              ? `${field.value.length} selected`
-                              : "Select roles"}
-                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                      </FormControl>
-                      <DropdownMenuContent className="sm:w-[266]">
-                        <DropdownMenuLabel>Roles</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        {                          
-                        roles.map((role) => (                                             
-                          <DropdownMenuCheckboxItem
-                            key={role.value}
-                            checked={field.value.includes(role.value)}
-                            onCheckedChange={(checked) => {                              
-                              const currentValues = [...field.value]
-                              
-                              if (checked) {
-                                if (!currentValues.includes(role.value)) {
-                                  field.onChange([...currentValues, role.value])
-                                }
-                              } else {
-                                field.onChange(
-                                  currentValues.filter((value) => value !== role.value)
-                                )
-                              }
-                            }}
-                          >
-                            {role.label}
-                          </DropdownMenuCheckboxItem>
-                        ))}
-                      </DropdownMenuContent>
-                    </DropdownMenu>                    
-                    <FormMessage />
                   </FormItem>
                 )}
-              />              
+              />
             </div>
             <div className="w-full pt-4">
               <span className="font-semibold">Bank Informations</span>

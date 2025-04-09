@@ -98,10 +98,10 @@ model Collaborator {
   agency      String?
   account     String?
   meiNumber   String?
+  accessType  String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  exams            Exam[]
   examSupervisors  ExamSupervisor[]
   examInvigilators ExamInvigilator[]
   examSpeakings    ExamSpeaking[]
@@ -121,8 +121,6 @@ model Venue {
   postalCode String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-
-  exams Exam[]
 }
 
 model ExamValue {
@@ -141,29 +139,16 @@ model Exam {
   isClosed        Boolean
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+  User            User?    @relation(fields: [userId], references: [id])
+  userId          String?
 
-  user   User?  @relation(fields: [userId], references: [id])
-  userId String
-
-  venue   Venue  @relation(fields: [venueId], references: [id])
-  venueId String
-
-  collaborator   Collaborator @relation(fields: [collaboratorId], references: [id])
-  collaboratorId String
-
-  supervisor   ExamSupervisor @relation(fields: [supervisorId], references: [id])
-  supervisorId String
-
-  invigilator   ExamInvigilator @relation(fields: [invigilatorId], references: [id])
-  invigilatorId String
-
-  speaking    ExamSpeaking @relation(fields: [speadkingId], references: [id])
-  speadkingId String
+  supervisors  ExamSupervisor[]
+  invigilators ExamInvigilator[]
+  speaking     ExamSpeaking[]
 }
 
 model ExamSupervisor {
   id        String   @id @default(uuid())
-  examId    String
   qtyHours  Decimal
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -171,12 +156,12 @@ model ExamSupervisor {
   collaborator   Collaborator @relation(fields: [collaboratorId], references: [id])
   collaboratorId String
 
-  exams Exam[]
+  examId String
+  Exam   Exam   @relation(fields: [examId], references: [id])
 }
 
 model ExamInvigilator {
   id        String   @id @default(uuid())
-  examId    String
   qtyHours  Decimal
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -184,12 +169,12 @@ model ExamInvigilator {
   collaborator   Collaborator @relation(fields: [collaboratorId], references: [id])
   collaboratorId String
 
-  exams Exam[]
+  examId String
+  Exam   Exam   @relation(fields: [examId], references: [id])
 }
 
 model ExamSpeaking {
   id            String   @id @default(uuid())
-  examId        String
   examName      String
   examPrice     Decimal
   qtyApplicants Int
@@ -199,7 +184,8 @@ model ExamSpeaking {
   collaborator   Collaborator @relation(fields: [collaboratorId], references: [id])
   collaboratorId String
 
-  exams Exam[]
+  examId String
+  Exam   Exam   @relation(fields: [examId], references: [id])
 }
 
 model Banks {
@@ -210,9 +196,13 @@ model Banks {
   collaborators Collaborator[]
 }
 
-enum EnumAccessType {
-  Administrator
+enum EnumCollaboratorAccessType {
   Supervisor
   Invigilator
   Speaking
+}
+
+enum EnumUserAccessType {
+  Administrator
+  Supervisor
 }

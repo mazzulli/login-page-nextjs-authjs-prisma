@@ -49,6 +49,9 @@ export const collaboratorSchema = z.object({
     .refine((val) => CNPJValidation(val), { message: "Invalid number" })
     .optional()
     .or(z.literal("")),
+  accessType: z.array(z.string()).min(1, {
+    message: "Please select at least one role.",
+  }),
 });
 
 export type CollaboratorSchema = z.infer<typeof collaboratorSchema>;

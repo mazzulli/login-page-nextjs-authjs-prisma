@@ -5,30 +5,17 @@ import { Button } from "@/_components/ui/button";
 import { Dialog, DialogTrigger } from "@/_components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/_components/ui/dropdown-menu";
 import { ClipboardCopyIcon, EditIcon, MoreHorizontal, Trash2Icon } from "lucide-react"
-import { UpsertCollaboratorDialogContent } from "./upsert-collaborator-dialog-content";
-import DeleteCollaboratorDialogContent from "./delete-collaborator-dialog-content";
+import { UpsertExamDialogContent } from "./upsert-exam-dialog-content";
 import { useState } from "react";
-import { Collaborator } from "@prisma/client";
+import { Exam } from "@prisma/client";
+import DeleteExamDialogContent from "./delete-exam-dialog-content";
 
-interface CollaboratorTableDropdownMenuProps {
-  collaborator: Collaborator;  
+interface ExamTableDropdownMenuProps {
+  exam: Exam;  
 }
 
-const TableDropdownMenu = ({collaborator}: CollaboratorTableDropdownMenuProps) => {     
+const TableDropdownMenu = ({exam}: ExamTableDropdownMenuProps) => {     
      const [editDialogOpen, setEditDialogOpen] = useState(false)     
-     
-     function stringToArray(string:string) {
-      /**
-       * Transforma uma string em um array, utilizando a vírgula como delimitador e removendo os espaços em branco.
-       *
-       * @param {string} string A string a ser transformada.
-       * @returns {string[]} Um array com os elementos da string.
-       */
-      const items = string.split(',');
-      const cleanElement = items.map(item => item.trim());
-      return cleanElement;
-    }
-
      return (        
        <div className="flex space-x-2">
          <AlertDialog>
@@ -42,7 +29,7 @@ const TableDropdownMenu = ({collaborator}: CollaboratorTableDropdownMenuProps) =
                </DropdownMenuTrigger>
                <DropdownMenuContent align="end">              
                  <DropdownMenuItem
-                   onClick={() => navigator.clipboard.writeText(collaborator.id)}
+                   onClick={() => navigator.clipboard.writeText(exam.id)}
                  >
                    <ClipboardCopyIcon size={16}/>
                    Copy ID
@@ -62,23 +49,18 @@ const TableDropdownMenu = ({collaborator}: CollaboratorTableDropdownMenuProps) =
                  </AlertDialogTrigger>
                </DropdownMenuContent>
              </DropdownMenu>
-             <UpsertCollaboratorDialogContent 
+             <UpsertExamDialogContent 
                defaultValues={{
-                id: collaborator.id, 
-                name: collaborator.name,
-                email: collaborator.email,
-                phoneNumber: collaborator.phoneNumber,
-                document: collaborator.document,
-                bankCode: collaborator.bankCode  || "",
-                bankName: collaborator.bankName  || "",
-                agency: collaborator.agency  || "",
-                account: collaborator.account || "",
-                meiNumber: collaborator.meiNumber || "",   
-                accessType: collaborator.accessType ? stringToArray(collaborator.accessType) : [],
+                id: exam.id, 
+                examDescription: exam.examDescription,
+                date: exam.date,
+                notes: exam.notes || "",
+                isClosed: exam.isClosed,
+                idUser: exam.userId,
                }}                
                onSuccess={()=> setEditDialogOpen(false)}
              />
-             <DeleteCollaboratorDialogContent collaboratorId={collaborator.id} />
+             <DeleteExamDialogContent examId={exam.id} />
            </Dialog>
          </AlertDialog>
        </div>

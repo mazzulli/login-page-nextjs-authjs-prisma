@@ -10,10 +10,10 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "@/_hooks/use-toast"
 import { upsertExam } from "@/_lib/_actions/exams/upsert-exam"
-import { examSchema } from "@/_lib/models/exam-schema"
+import { examConfigSchema } from "@/_lib/models/exam-schema"
 import CurrencyInputFormat from "@/_components/currency-input"
 
-type FormSchema = z.infer<typeof examSchema>
+type FormSchema = z.infer<typeof examConfigSchema>
 interface UpsertExamDialogContentProps {
   defaultValues?: FormSchema
   onSuccess?: ()=>void
@@ -25,7 +25,7 @@ export const UpsertExamDialogContent = ({
 }: UpsertExamDialogContentProps) => {    
   const form = useForm<FormSchema>({
     shouldUnregister: true, // limpa os dados do formulário ao fechar
-    resolver: zodResolver(examSchema),        
+    resolver: zodResolver(examConfigSchema),        
     defaultValues: defaultValues ?? {
       id:  "",
       name:  "",

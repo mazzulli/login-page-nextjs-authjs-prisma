@@ -4,7 +4,7 @@ import type React from "react"
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Users, UserPlus, School, FileText, Settings, Menu, LayoutDashboard } from "lucide-react"
+import { FileText, Settings, Menu, LayoutDashboard, MapPin, UsersRoundIcon, UserRoundCogIcon,  } from "lucide-react"
 import { cn } from "@/_lib/utils"
 import { Button } from "@/_components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/_components/ui/sheet"
@@ -24,17 +24,17 @@ const navItems: NavItem[] = [
   {
     title: "Users",
     href: "/users",
-    icon: Users,
+    icon: UsersRoundIcon,
   },
   {
     title: "Collaborators",
     href: "/collaborators",
-    icon: UserPlus,
+    icon: UserRoundCogIcon,
   },
   {
-    title: "Schools",
-    href: "/schools",
-    icon: School,
+    title: "Venues",
+    href: "/venues",
+    icon: MapPin,
   },
   {
     title: "Exam Application",

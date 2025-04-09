@@ -1,12 +1,12 @@
 "use server";
 
 import db from "@/_lib/db/db";
-import { SchoolSchema, schoolSchema } from "@/_lib/models/school-schema";
+import { venueSchema, VenueSchema } from "@/_lib/models/venue-schema";
 import { revalidatePath } from "next/cache";
 
-export const upsertSchool = async (data: SchoolSchema) => {
+export const upsertVenue = async (data: VenueSchema) => {
   // await new Promise((resolve) => setTimeout(resolve, 2000));
-  schoolSchema.parse(data);
+  venueSchema.parse(data);
   await db.venue.upsert({
     where: { id: data.id ?? "" },
     update: data,

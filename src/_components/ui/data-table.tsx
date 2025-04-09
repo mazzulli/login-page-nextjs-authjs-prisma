@@ -38,12 +38,14 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   controlButton: React.ReactNode
+  sortedColumn: string | null
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,  
   controlButton,
+  sortedColumn
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
@@ -72,11 +74,11 @@ export function DataTable<TData, TValue>({
         <div className="relative w-72">
           <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search by name..."                
+            placeholder={ sortedColumn==="examDescription" ? "Search by exam..." : "Search by name..." }
             className="pl-8"
-            value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+            value={(table.getColumn(sortedColumn ? sortedColumn : "name")?.getFilterValue() as string) ?? ""}
             onChange={(event) =>
-              table.getColumn("name")?.setFilterValue(event.target.value)
+              table.getColumn(sortedColumn ? sortedColumn : "name")?.setFilterValue(event.target.value)
             }            
           />          
         </div> 

@@ -97,8 +97,6 @@ export const UpsertUserDialogContent = ({
   const roles = [
     { label: "Administrator", value: "Administrator" },
     { label: "Supervisor", value: "Supervisor" },
-    { label: "Invigilator", value: "Invigilator" },
-    { label: "Speaking", value: "Speaking" },
   ]
   
   return(
@@ -214,7 +212,6 @@ export const UpsertUserDialogContent = ({
                       <DropdownMenuContent className="sm:w-[547]">
                         <DropdownMenuLabel>Roles</DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        debugger
                         {                          
                         roles.map((role) => (                                             
                           <DropdownMenuCheckboxItem
@@ -268,78 +265,6 @@ export const UpsertUserDialogContent = ({
                   </FormItem>
                 )}
               />
-              {/* <FormField                
-                control={form.control}
-                name="isActive"
-                render={({ field }) => (
-                  <FormItem className="flex gap-2 space-y-0 items-end justify-end">
-                    <FormLabel>
-                      Is active?
-                    </FormLabel>                    
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}                        
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              /> */}
-            {/* <FormField
-              control={form.control}
-              name="accessType"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Access Type</FormLabel>
-                  <Popover open={open} onOpenChange={setOpen}>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant="outline"
-                          role="combobox"
-                          aria-expanded={open}
-                          className="w-full justify-between"
-                        >
-                          {field.value.length ? `${field.value.length} selected` : "Select roles"}
-                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-full p-0">
-                      <Command className="sm:w-[547]">
-                        <CommandList>
-                          <CommandEmpty>No roles found.</CommandEmpty>
-                          <CommandGroup>
-                            {roles.map((role) => (
-                              <CommandItem
-                                key={role.value}
-                                onSelect={() => {
-                                  const currentValues = field.value
-                                  const newValues = currentValues.includes(role.value) // already exist
-                                    ? currentValues.filter((value) => value !== role.value) // true
-                                    : [...currentValues,  role.value] // false
-    
-                                    field.onChange(newValues)
-                                }}
-                              >
-                                <div className={`mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary 
-                                ${field.value.includes(role.value) ? "bg-primary text-primary-foreground"
-                                  : "opacity-50 [&_svg]:invisible"}`}>
-                                  <Check className="h-3 w-3" />
-                                </div>
-                                {role.label}
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
-                  <FormDescription>Select one or more roles for the user.</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />             */}
             </div>
             <DialogFooter>
               <DialogClose asChild>
