@@ -1,14 +1,12 @@
-"use client"
-
 import type { ReactNode } from "react"
+
 import { DashboardSidebar } from "./dashboard-sidebar"
 import { DashboardHeader } from "./dashboard-header"
-
 interface DashboardLayoutProps {
   children: ReactNode
 }
 
-export function DashboardLayout({ children }: DashboardLayoutProps) {
+export function DashboardLayout({ children }: DashboardLayoutProps) {    
   return (
     <div className="flex min-h-screen flex-col">
       <DashboardHeader />

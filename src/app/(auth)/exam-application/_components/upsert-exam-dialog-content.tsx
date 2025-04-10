@@ -3,24 +3,26 @@
 import { DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription, DialogClose } from "@/_components/ui/dialog"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/_components/ui/form"
 import { Button } from "@/_components/ui/button"
+import { Textarea } from "@/_components/ui/textarea"
 import { Input } from "@/_components/ui/input"
-import { ChevronsUpDown, Loader2Icon } from "lucide-react"
+import { CalendarIcon, ChevronsUpDown, Loader2Icon } from "lucide-react"
 import {z} from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "@/_hooks/use-toast"
-import { upsertCollaborator } from "@/_lib/_actions/collaborator/upsert"
-import { collaboratorSchema } from "@/_lib/models/collaborator-schema"
 import { Popover, PopoverContent, PopoverTrigger } from "@/_components/ui/popover"
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/_components/ui/command"
-import { useEffect, useState } from "react"
-import { Banks } from "@prisma/client"
 import { examSchema } from "@/_lib/models/exam-schema"
 import { upsertExam } from "@/_lib/_actions/exams/upsert-exam"
+import { cn } from "@/_lib/utils"
+import { enUS } from "date-fns/locale";
+import { Calendar } from "@/_components/ui/calendar"
+import { useEffect, useState } from "react"
+import { Venue } from "@prisma/client"
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/_components/ui/command"
 
 type FormSchema = z.infer<typeof examSchema>
 interface UpsertExamDialogContentProps {
-  defaultValues?: FormSchema
+  defaultValues?: FormSchema  
   onSuccess?: ()=>void
 }
 
@@ -28,49 +30,51 @@ export const UpsertExamDialogContent = ({
   defaultValues,
   onSuccess
 }: UpsertExamDialogContentProps) => {    
+  
   const form = useForm<FormSchema>({
     shouldUnregister: true, // limpa os dados do formulário ao fechar
     resolver: zodResolver(examSchema),        
     defaultValues: defaultValues ?? {      
       id:  "",
-      idVenue: "",
-      venue: "",
+      venue: "",      
       examDescription: "",
-      
+      notes: "",      
+      date: new Date()      
     },
   })
-  
-  const isEditing = !!defaultValues
-  const [openBank, setOpenBank] = useState(false)
-  const [banks, setBanks] = useState<Banks[]>([])
 
-  // Fetch banks on component mount
+  const isEditing = !!defaultValues
+  const [openVenue, setOpenVenue] = useState(false)
+  const [venues, setVenues] = useState<Venue[]>([])
+  
+  // Fetch venues on component mount
   useEffect(() => {
-    const fetchBanks = async () => {
+    const fetchVenues = async () => {
       try {        
-        await fetch("api/banks").then((res) => res.json()).then((data) => setBanks(data))                
+        await fetch("api/venues").then((res) => res.json()).then((data) => setVenues(data))                
       } catch (error) {
         toast(
           {
             title: "Ops...",
-            description: "Can't fetch banks.",
+            description: "Can't fetch venues.",
           }
         )
-        console.error("ERROR TO FETCH BANKS: ",error)
+        console.error("ERROR TO FETCH VENUES: ",error)
       }
     }      
-    fetchBanks()
+    fetchVenues()
   }, [])
-  
+
   const onSubmit = async (data: FormSchema) => {    
-    try {
+    console.log("MEUS DADOS:",data)
+    try {      
       await upsertExam({...data, id: defaultValues?.id })
       onSuccess?.()      
       toast(isEditing ? { 
         title: "Success!",  
-        description: "Collaborator updated successfully.",
+        description: "Exam updated successfully.",
       } : {title: "Success!",  
-        description: "Collaborator created successfully.",})
+        description: "Exam created successfully.",})
       }  
     catch (error:unknown) {      
       if (error instanceof Error) {
@@ -84,163 +88,70 @@ export const UpsertExamDialogContent = ({
         console.error("An unknown error occurred:", error);        
       }      
     }    
-  }
- 
-  // Format phone on change values
-  function formatPhoneNumber(value: string) {
-    // Remove all non-digit characters
-    const digits = value.replace(/\D/g, "")
-
-    // Apply the formatting based on the number of digits
-    if (digits.length <= 2) {
-      return digits
-    } else if (digits.length <= 7) {
-      return `(${digits.slice(0, 2)}) ${digits.slice(2)}`
-    } else {
-      return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7, 11)}`
-    }
-  }
-
-  // Format document on change values
-  function formatDocument(value: string) {
-    // Remove all non-digit characters
-    const digits = value.replace(/\D/g, "")
-
-    // Apply the formatting based on the number of digits
-    if (digits.length <= 3) {
-      return digits
-    } else if (digits.length <= 6) {
-      return `${digits.slice(0, 3)}.${digits.slice(3)}`
-    } else if (digits.length <= 9) {
-      return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6)}`
-    } else {
-      return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6, 9)}-${digits.slice(9, 11)}`
-    }
-  }
-
-  // CNPJ formatting function
-  function formatCNPJ(value: string) {
-    // Remove all non-digit characters
-    const digits = value.replace(/\D/g, "")
-
-    // Apply the formatting based on the number of digits
-    if (digits.length <= 2) {
-      return digits
-    } else if (digits.length <= 5) {
-      return `${digits.slice(0, 2)}.${digits.slice(2)}`
-    } else if (digits.length <= 8) {
-      return `${digits.slice(0, 2)}.${digits.slice(2, 5)}.${digits.slice(5)}`
-    } else if (digits.length <= 12) {
-      return `${digits.slice(0, 2)}.${digits.slice(2, 5)}.${digits.slice(5, 8)}/${digits.slice(8)}`
-    } else {
-      return `${digits.slice(0, 2)}.${digits.slice(2, 5)}.${digits.slice(5, 8)}/${digits.slice(8, 12)}-${digits.slice(12, 14)}`
-    }
-  }
+  } 
 
   return(
       <DialogContent className="sm:max-w-[600px]">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <DialogHeader>
-            <DialogTitle>{!isEditing ? "New" : "Edit"} collaborator</DialogTitle>
-            <DialogDescription id="user-form">Fill in the form below to create a new collaborator</DialogDescription>            
-          </DialogHeader>
+            <DialogTitle>{!isEditing ? "New" : "Edit"} exam</DialogTitle>
+            <DialogDescription id="user-form">Fill in the form below to create a new exam</DialogDescription>            
+            </DialogHeader>
             <FormField
               control={form.control}
-              name="name"
+              name="date"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Full Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Fill collaborator name" {...field} />
-                  </FormControl>
+                <FormItem className="flex flex-col">
+                  <FormLabel>Date</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "w-[240px] pl-3 text-left font-normal",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                        {field.value ? (
+                            new Date(field.value).toLocaleDateString("en-US", {
+                              day: "2-digit",
+                              month: "long",
+                              year: "numeric",
+                            })                            
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={(date) =>
+                          date > new Date() || date < new Date("2000-01-01")
+                        }
+                        initialFocus                      
+                        locale={enUS}
+                      />
+                    </PopoverContent>
+                  </Popover>
                   <FormMessage />
                 </FormItem>
-              )}
-            />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input 
-                        placeholder="email@email.com" {...field}
-                        type="email"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="phoneNumber"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Phone</FormLabel>
-                    <FormControl>
-                      <Input 
-                        placeholder="(11) 12345-1234" 
-                        {...field}
-                        value={formatPhoneNumber(field.value)}
-                        onChange={(e) => {
-                          // Get only digits from the input
-                          const digits = e.target.value.replace(/\D/g, "")
-                          // Limit to 11 digits
-                          const limitedDigits = digits.slice(0, 11)
-                          // Update the field with raw digits
-                          field.onChange(limitedDigits)
-                        }}
-                        inputMode="numeric"
-                         />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />               
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">              
-              <FormField
-                control={form.control}
-                name="document"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>CPF</FormLabel>
-                    <FormControl>
-                      <Input 
-                        placeholder="123.123.123-12" 
-                        {...field} 
-                        value={formatDocument(field.value)}
-                        onChange={(e) => {
-                          // Get only digits from the input
-                          const digits = e.target.value.replace(/\D/g, "")
-                          // Limit to 11 digits
-                          const limitedDigits = digits.slice(0, 11)
-                          // Update the field with raw digits
-                          field.onChange(limitedDigits)
-                        }}
-                        inputMode="numeric"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="w-full pt-4">
-              <span className="font-semibold">Bank Informations</span>
-            </div>
+              )}            
+            />          
             <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
               <FormField
                 control={form.control}
-                name="bankName"
+                name="venue"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Bank</FormLabel>
-                    <Popover open={openBank} onOpenChange={setOpenBank}>
+                    <FormLabel>Venue</FormLabel>
+                    <Popover open={openVenue} onOpenChange={setOpenVenue}>
                       <PopoverTrigger className={"w-full"} asChild>
                         <FormControl>
                           <Button
@@ -249,7 +160,7 @@ export const UpsertExamDialogContent = ({
                             className={"text-muted-foreground justify-between"}
                           >                            
                             {field.value  ? 
-                               banks.find((bank) => bank.name === field.value)?.name : "Select a bank"}
+                               venues.find((venue) => venue.name === field.value)?.name : "Select a venue"}
                             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                           </Button>
                         </FormControl>
@@ -258,21 +169,18 @@ export const UpsertExamDialogContent = ({
                         <Command className="w-[547]">
                           <CommandInput placeholder="Search bank..." className="w-full p-0" />
                           <CommandList>
-                            <CommandEmpty>No bank found.</CommandEmpty>
+                            <CommandEmpty>No venue found.</CommandEmpty>
                             <CommandGroup>
-                              {banks.map((bank) => (
+                              {venues.map((venue) => (
                                 <CommandItem                                   
-                                  value={bank.code + " - " + bank.name}
-                                  key={bank.id}
-                                  onSelect={() => {
-                                    form.setValue("bankId", bank.id)                                              
-                                    form.setValue("bankCode", String(bank.code))
-                                    form.setValue("bankName", bank.name)                                        
-                                    
-                                    setOpenBank(false);
+                                  value={venue.name}
+                                  key={venue.id}
+                                  onSelect={() => {                                    
+                                    form.setValue("venue", venue.name)                                                                            
+                                    setOpenVenue(false);
                                   }}
                                 >
-                                  {bank.name}                                
+                                  {venue.name}                                
                                 </CommandItem>
                               ))}
                             </CommandGroup>
@@ -284,61 +192,40 @@ export const UpsertExamDialogContent = ({
                   </FormItem>
                 )}
               />
-            </div>            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pb-10">
               <FormField
                 control={form.control}
-                name="agency"
+                name="examDescription"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Agency</FormLabel>
-                    <FormControl>
-                      <Input placeholder="00000-0" {...field}  />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="account"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Account</FormLabel>
-                    <FormControl>
-                      <Input placeholder="00000000-0" {...field}  />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="meiNumber"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>MEI</FormLabel>
+                    <FormLabel>Exam Description</FormLabel>
                     <FormControl>
                       <Input 
-                        placeholder="00.000.000/0000-00" 
-                        {...field}  
-                        value={formatCNPJ(field.value ? field.value : '')}
-                        onChange={(e) => {
-                          // Get only digits from the input
-                          const digits = e.target.value.replace(/\D/g, "")
-                          // Limit to 11 digits
-                          const limitedDigits = digits.slice(0, 14)
-                          // Update the field with raw digits
-                          field.onChange(limitedDigits)
-                        }}
-                        inputMode="numeric"
+                        placeholder="Exam title" 
+                        {...field}                        
                       />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
-              />
-            </div>
+              />               
+              <FormField
+                control={form.control}
+                name="notes"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Notes</FormLabel>
+                    <FormControl>
+                      <Textarea 
+                        placeholder="If necessary, fill with some notes..." 
+                        rows={3}
+                        {...field}                        
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />        
+            </div>                                 
             <DialogFooter>
               <DialogClose asChild>
                 <Button type="button" variant="outline">
@@ -347,7 +234,10 @@ export const UpsertExamDialogContent = ({
               </DialogClose>
               <Button                 
                 type="submit"
-                disabled={form.formState.isSubmitting}
+                disabled={form.formState.isSubmitting}  
+                onClick={()=>{
+                  console.log(form.getValues());
+                }}
               >
                 {form.formState.isSubmitting && (
                   <Loader2Icon className="animate-spin mr-2" />

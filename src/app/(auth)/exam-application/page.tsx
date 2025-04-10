@@ -10,10 +10,9 @@ import { CreateExamButton } from "./_components/create-exam-button";
 import { getExams } from "@/app/_data-access/get-exams";
 
 export default async function Exams() {
-  const session = await auth();
-    
+  const session = await auth();    
   if (!session) redirect("/sign-in");
-
+    
   const exams = await getExams();
   
   return (
@@ -23,8 +22,16 @@ export default async function Exams() {
           <div className="flex justify-between">
             <h1 className="text-3xl font-bold mb-6">Exams</h1>                     
           </div>
-          <Suspense fallback={<div>Loading...</div>}>            
-            <DataTable columns={tableColumns} sortedColumn={"examDescription"} data={JSON.parse(JSON.stringify(exams))} controlButton={<CreateExamButton />} />
+          <Suspense fallback={<div>Loading...</div>}>                   
+            <DataTable 
+              columns={tableColumns} 
+              sortedColumn={"examDescription"} 
+              data={JSON.parse(JSON.stringify(exams))} 
+              controlButton={
+                <CreateExamButton 
+                  userData={{ id: session.user?.id ? session.user.id : '' , name: session.user?.name ? session.user.name : ''}}
+                />
+              } />
           </Suspense>
           <Toaster />
       </div>

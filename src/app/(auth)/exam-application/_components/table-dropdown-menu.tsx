@@ -2,7 +2,7 @@
 
 import { AlertDialog, AlertDialogTrigger } from "@/_components/ui/alert-dialog";
 import { Button } from "@/_components/ui/button";
-import { Dialog, DialogTrigger } from "@/_components/ui/dialog";
+import { Dialog, DialogDescription, DialogTrigger } from "@/_components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/_components/ui/dropdown-menu";
 import { ClipboardCopyIcon, EditIcon, MoreHorizontal, Trash2Icon } from "lucide-react"
 import { UpsertExamDialogContent } from "./upsert-exam-dialog-content";
@@ -15,11 +15,13 @@ interface ExamTableDropdownMenuProps {
 }
 
 const TableDropdownMenu = ({exam}: ExamTableDropdownMenuProps) => {     
+
      const [editDialogOpen, setEditDialogOpen] = useState(false)     
      return (        
        <div className="flex space-x-2">
          <AlertDialog>
            <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+             <DialogDescription/>
              <DropdownMenu>
                <DropdownMenuTrigger asChild>
                  <Button variant="ghost" className="h-8 w-8 p-0">
@@ -54,11 +56,9 @@ const TableDropdownMenu = ({exam}: ExamTableDropdownMenuProps) => {
                 id: exam.id, 
                 examDescription: exam.examDescription,
                 date: exam.date,
-                notes: exam.notes || "",
-                isClosed: exam.isClosed,
-                idUser: exam.userId,
+                notes: exam.notes || "",                
                }}                
-               onSuccess={()=> setEditDialogOpen(false)}
+               onSuccess={()=> setEditDialogOpen(false)}               
              />
              <DeleteExamDialogContent examId={exam.id} />
            </Dialog>

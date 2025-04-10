@@ -38,7 +38,7 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   controlButton: React.ReactNode
-  sortedColumn: string | null
+  sortedColumn: string | null  
 }
 
 export function DataTable<TData, TValue>({

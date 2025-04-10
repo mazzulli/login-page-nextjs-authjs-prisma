@@ -14,65 +14,11 @@ export default async function Home() {
         <p className="text-muted-foreground">
           Welcome to your dashboard. Select an option from the sidebar to get started.
         </p>
-        {/* <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <div className="rounded-lg border bg-card p-6 shadow">
-            <h3 className="text-lg font-medium">Quick Stats</h3>
-            <div className="mt-4 grid gap-2">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">Total Users</span>
-                <span className="font-medium">1,234</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">Active Schools</span>
-                <span className="font-medium">56</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">Exam Applications</span>
-                <span className="font-medium">89</span>
-              </div>
-            </div>
-          </div>
-          <div className="rounded-lg border bg-card p-6 shadow">
-            <h3 className="text-lg font-medium">Recent Activity</h3>
-            <div className="mt-4 space-y-3">
-              <div className="flex flex-col">
-                <span className="text-sm font-medium">New user registered</span>
-                <span className="text-xs text-muted-foreground">2 hours ago</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-sm font-medium">Test configuration updated</span>
-                <span className="text-xs text-muted-foreground">5 hours ago</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-sm font-medium">New school added</span>
-                <span className="text-xs text-muted-foreground">Yesterday</span>
-              </div>
-            </div>
-          </div>
-          <div className="rounded-lg border bg-card p-6 shadow">
-            <h3 className="text-lg font-medium">System Status</h3>
-            <div className="mt-4 space-y-2">
-              <div className="flex items-center gap-2">
-                <div className="h-2 w-2 rounded-full bg-green-500"></div>
-                <span className="text-sm">All systems operational</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="h-2 w-2 rounded-full bg-green-500"></div>
-                <span className="text-sm">Database: Connected</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="h-2 w-2 rounded-full bg-green-500"></div>
-                <span className="text-sm">API: Responsive</span>
-              </div>
-            </div>
-          </div>
-        </div> */}
       </div>
       <div className="grid grid-cols-2 grid-rows-1 gap-6 overflow-hidden p-6">
         <PieChartUsersType />
         <DashboardCard />        
-      </div>
-      
+      </div>      
     </DashboardLayout>
   )
 }

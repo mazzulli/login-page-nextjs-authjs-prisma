@@ -9,7 +9,7 @@ import {z} from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "@/_hooks/use-toast"
-import { upsertExam } from "@/_lib/_actions/exams/upsert-exam"
+import { upsertExamConfig } from "@/_lib/_actions/exams/upsert-exam"
 import { examConfigSchema } from "@/_lib/models/exam-schema"
 import CurrencyInputFormat from "@/_components/currency-input"
 
@@ -37,7 +37,7 @@ export const UpsertExamDialogContent = ({
 
   const onSubmit = async (data: FormSchema) => {    
     try {
-      await upsertExam({...data, id: defaultValues?.id })
+      await upsertExamConfig({...data, id: defaultValues?.id })
       onSuccess?.()            
       toast(isEditing ? { 
         title: "Success!",  

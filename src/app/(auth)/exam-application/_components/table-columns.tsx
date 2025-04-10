@@ -6,6 +6,7 @@ import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown } from "lucide-react"
 import TableDropdownMenu from "./table-dropdown-menu"
 import { Badge } from "@/_components/ui/badge"
+import dateFormat from "@/_utils/dateFormat"
 
 export const tableColumns: ColumnDef<Exam>[] = [  
   {    
@@ -21,6 +22,10 @@ export const tableColumns: ColumnDef<Exam>[] = [
         </Button>
       )
     },
+    cell: ({row}) => {
+    const date = row.original.date
+    return dateFormat(date)
+    }
   },
   {
     accessorKey: "venue",
@@ -34,8 +39,8 @@ export const tableColumns: ColumnDef<Exam>[] = [
     accessorKey: "isClosed",
     header: "Status",
     cell: ({row}) => {
-      const isOpenValue = row.original.isClosed            
-      return <Badge variant={isOpenValue ? "default" : "secondary"}>{isOpenValue ? "Open" : "Closed"}</Badge>
+      const isClosedValue = row.original.isClosed            
+      return <Badge variant={isClosedValue ? "default" : "secondary"}>{!isClosedValue ? "Open" : "Closed"}</Badge>
     }
   },
   {

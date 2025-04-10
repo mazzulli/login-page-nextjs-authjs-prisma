@@ -9,9 +9,7 @@ export const examSchema = z.object({
     message: "Name must be at least 2 characters long.",
   }),
   notes: z.string().optional(),
-  isClosed: z.boolean(),
-  idVenue: z.string().uuid().optional(),
-  idUser: z.string().uuid(),
+  venue: z.string().optional(),
 
   // // Supervisor schema
   // idSupervisor: z.string().uuid().optional(),

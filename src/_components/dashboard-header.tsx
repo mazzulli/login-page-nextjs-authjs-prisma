@@ -1,5 +1,3 @@
-"use client"
-
 import { SignOut } from "@/_components/sign-out";
 // import { Avatar, AvatarFallback  } from "@/_components/ui/avatar"
 import { Button } from "@/_components/ui/button"
@@ -13,17 +11,20 @@ import {
 } from "@/_components/ui/dropdown-menu"
 import { Settings, User, UserCircle2 } from "lucide-react"
 import logoImg from '@/_assets/logo_CENW.svg'
-import Image from "next/image";
+import Image from "next/image"
+import { auth } from "@/_lib/auth";
+import { redirect } from "next/navigation";
 
-export function DashboardHeader() {
-  // This would typically come from your auth provider
+export async function DashboardHeader() {
+  const session = await auth();
+  if (!session?.user) redirect("/sign-in");
+
   const user = {
-    name: "John Doe",
-    email: "john.doe@example.com",
-    role: "Administrator",
-    avatarUrl: "/placeholder.svg?height=32&width=32",
-  }
-
+  name: session?.user?.name,
+  email: session?.user?.email,
+  avatar: session?.user?.image,
+  role: "Admin",
+ }
   return (
     <header className="sticky top-0 z-10 flex h-20 items-center justify-between border-b bg-white px-4 dark:bg-zinc-950 md:px-6">
       <Image className="hidden md:block" src={logoImg} alt="Logo" width={120} height={80} />
