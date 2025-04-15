@@ -1,44 +1,88 @@
-import { z } from "zod";
+import * as z from "zod";
 
-// schema for exams registers
-export const examSchema = z.object({
-  // exams
-  id: z.string().uuid().optional(),
+// Tipos base
+export interface Person {
+  id: string;
+  collaboratorId: string;
+  collaboratorName: string;
+  workedHours: number;
+}
+
+export interface Speaking {
+  id: string;
+  collaboratorId: string;
+  collaboratorName: string;
+  examTypeId: string;
+  examTypeName: string;
+  qtyApplicants: number;
+}
+
+export interface ExamData {
+  id?: string;
+  date: Date;
+  venue: string;
+  description: string;
+  notes?: string;
+  status?: string;
+  supervisors: Person[];
+  invigilators: Person[];
+  speakings: Speaking[];
+}
+
+// Schema for Exam Information
+export const examInformationSchema = z.object({
+  id: z.string().optional(),
   date: z.date(),
-  examDescription: z.string().min(2, {
-    message: "Name must be at least 2 characters long.",
-  }),
+  venue: z.string().min(1, "Venue is required"),
+  description: z.string().min(1, "Description is required"),
   notes: z.string().optional(),
-  venue: z.string().optional(),
-
-  // // Supervisor schema
-  // idSupervisor: z.string().uuid().optional(),
-  // qtyHoursSupervisor: z.number().optional(),
-  // qtyExtraValueSupervisor: z.number().optional(),
-
-  // // Invigilator
-  // idInvigilator: z.string().uuid().optional(),
-  // qtyHoursInvigilator: z.number().optional(),
-  // qtyExtraValueInvigilator: z.number().optional(),
-
-  // // Speaking
-  // idSpeaking: z.string().uuid().optional(),
-  // examApplied: z.string().optional(),
-  // qtyHoursSpeaking: z.number().optional(),
-  // qtyExtraValueSpeaking: z.number().optional(),
-
-  // price: z.string().refine(
-  //   (val) => {
-  //     const number = parseFloat(val.replace(/\D/g, "")) / 100;
-  //     return !isNaN(number) && number > 0;
-  //   },
-  //   {
-  //     message: "Value has to be a positive number.",
-  //   }
-  // ),
 });
 
-export type ExamSchema = z.infer<typeof examSchema>;
+// Schema for Supervisor
+export const supervisorSchema = z.object({
+  supervisors: z.array(
+    z.object({
+      id: z.string(),
+      collaboratorId: z.string(),
+      collaboratorName: z.string().min(1, "Supervisor is required"),
+      workedHours: z.coerce.number().min(0.1, "Hours must be greater than 0"),
+    })
+  ),
+});
+
+// Schema for Invigilator
+export const invigilatorSchema = z.object({
+  invigilators: z.array(
+    z.object({
+      id: z.string(),
+      collaboratorId: z.string(),
+      collaboratorName: z.string().min(1, "Invigilator is required"),
+      workedHours: z.coerce.number().min(0.1, "Hours must be greater than 0"),
+    })
+  ),
+});
+
+// Schema for Speaking
+export const speakingSchema = z.object({
+  speakings: z.array(
+    z.object({
+      id: z.string(),
+      collaboratorId: z.string(),
+      collaboratorName: z.string().min(1, "Speaking is required"),
+      examTypeId: z.string({ message: "Exam ID is required" }),
+      examTypeName: z.string().min(1, "Exam name is required"),
+      qtyApplicants: z.coerce.number().min(1, "Quantity must be at least 1"),
+    })
+  ),
+});
+
+// Combined schema for the entire form
+export const examFormSchema = examInformationSchema
+  .merge(supervisorSchema)
+  .merge(invigilatorSchema)
+  .merge(speakingSchema);
+
+export type ExamFormValues = z.infer<typeof examFormSchema>;
 
 // schema for card configuration
 export const examConfigSchema = z.object({

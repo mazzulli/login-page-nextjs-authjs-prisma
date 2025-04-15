@@ -27,7 +27,7 @@ model User {
   accessType  String?
   isActive    Boolean @default(true)
 
-  Exam Exam[]
+  exam Exam[]
 }
 
 model Account {
@@ -102,9 +102,9 @@ model Collaborator {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  examSupervisors  ExamSupervisor[]
-  examInvigilators ExamInvigilator[]
-  examSpeakings    ExamSpeaking[]
+  examsSupervisor  ExamSupervisor[]
+  examsInvigilator ExamInvigilator[]
+  examsSpeaking    ExamSpeaking[]
 
   banks  Banks?  @relation(fields: [bankId], references: [id])
   bankId String?
@@ -129,19 +129,22 @@ model ExamValue {
   price     Decimal  @db.Decimal(10, 2)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  ExamSpeaking ExamSpeaking[]
 }
 
 model Exam {
-  id              String   @id @default(uuid())
-  date            DateTime
-  examDescription String
-  venue           String   @default("")
-  notes           String?
-  isClosed        Boolean
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  User            User?    @relation(fields: [userId], references: [id])
-  userId          String?
+  id          String   @id @default(uuid())
+  date        DateTime
+  description String   @default("")
+  venue       String   @default("")
+  notes       String?
+  isClosed    Boolean
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String?
 
   supervisors  ExamSupervisor[]
   invigilators ExamInvigilator[]
@@ -149,44 +152,35 @@ model Exam {
 }
 
 model ExamSupervisor {
-  id        String   @id @default(uuid())
-  qtyHours  Decimal
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
+  exam           Exam         @relation(fields: [examId], references: [id])
+  examId         String
   collaborator   Collaborator @relation(fields: [collaboratorId], references: [id])
   collaboratorId String
+  qtyHours       Decimal
 
-  examId String
-  Exam   Exam   @relation(fields: [examId], references: [id])
+  @@id([examId, collaboratorId])
 }
 
 model ExamInvigilator {
-  id        String   @id @default(uuid())
-  qtyHours  Decimal
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
+  exam           Exam         @relation(fields: [examId], references: [id])
+  examId         String
   collaborator   Collaborator @relation(fields: [collaboratorId], references: [id])
   collaboratorId String
+  qtyHours       Decimal
 
-  examId String
-  Exam   Exam   @relation(fields: [examId], references: [id])
+  @@id([examId, collaboratorId])
 }
 
 model ExamSpeaking {
-  id            String   @id @default(uuid())
-  examName      String
-  examPrice     Decimal
-  qtyApplicants Int
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
+  exam           Exam         @relation(fields: [examId], references: [id])
+  examId         String
   collaborator   Collaborator @relation(fields: [collaboratorId], references: [id])
   collaboratorId String
+  examValue      ExamValue    @relation(fields: [examValueId], references: [id])
+  examValueId    String
+  qtyApplicants  Decimal
 
-  examId String
-  Exam   Exam   @relation(fields: [examId], references: [id])
+  @@id([examId, collaboratorId])
 }
 
 model Banks {

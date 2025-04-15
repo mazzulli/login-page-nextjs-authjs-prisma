@@ -3,12 +3,12 @@
 import type React from "react"
 import { Dialog } from "@/_components/ui/dialog"
 import { UpsertExamDialogContent } from "./upsert-exam-dialog-content"
-import { ExamSchema } from "@/_lib/models/exam-schema"
+import { ExamConfigSchema } from "@/_lib/models/exam-schema"
 
 interface EditExamDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  defaultValues: ExamSchema
+  defaultValues: ExamConfigSchema
 }
 
 export default function EditExamDialog({ open, onOpenChange, defaultValues }: EditExamDialogProps) {    

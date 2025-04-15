@@ -4,7 +4,7 @@ import type React from "react"
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { FileText, Settings, Menu, LayoutDashboard, MapPin, UsersRoundIcon, UserRoundCogIcon,  } from "lucide-react"
+import { FileText, Settings, Menu, LayoutDashboard, MapPin, UsersRoundIcon, UserRoundCogIcon, CircleDollarSign,  } from "lucide-react"
 import { cn } from "@/_lib/utils"
 import { Button } from "@/_components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/_components/ui/sheet"
@@ -38,13 +38,18 @@ const navItems: NavItem[] = [
   },
   {
     title: "Exam Application",
-    href: "/exam-application",
+    href: "/exams",
     icon: FileText,
   },
   {
     title: "Exam Configurations",
     href: "/exam-configurations",
     icon: Settings,
+  },
+  {
+    title: "Payments",
+    href: "/payments",
+    icon: CircleDollarSign,
   },
 ]
 

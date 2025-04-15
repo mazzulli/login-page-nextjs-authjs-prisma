@@ -5,27 +5,27 @@ import db from "@/_lib/db/db";
 import {
   examConfigSchema,
   ExamConfigSchema,
-  ExamSchema,
-  examSchema,
+  ExamData,
+  examFormSchema,
 } from "@/_lib/models/exam-schema";
 import { revalidatePath } from "next/cache";
 
-export const upsertExam = async (data: ExamSchema) => {
+export const upsertExam = async (data: ExamData) => {
   const session = await auth();
   if (!session) {
     throw new Error("Unauthorized");
   }
 
-  examSchema.parse(data);
+  examFormSchema.parse(data);
 
-  const result = await db.exam.upsert({
-    where: { id: data.id ?? "" },
-    update: { ...data, isClosed: false, userId: session.user?.id },
-    create: { ...data, isClosed: false, userId: session.user?.id },
-  });
+  // const result = await db.exam.upsert({
+  //   where: { id: data.id ?? "" },
+  //   update: { ...data, isClosed: false, userId: session.user?.id },
+  //   create: { ...data, isClosed: false, userId: session.user?.id },
+  // });
   revalidatePath("/");
-  revalidatePath("/exam-application");
-  return JSON.parse(JSON.stringify(result));
+  revalidatePath("/exams");
+  // return JSON.parse(JSON.stringify(result));
 };
 
 export const upsertExamConfig = async (data: ExamConfigSchema) => {

@@ -29,7 +29,7 @@ export const getExams = async (): Promise<Exam[]> => {
       },
     },
     orderBy: {
-      examDescription: "asc",
+      description: "asc",
     },
   });
   return result;
